@@ -15,7 +15,10 @@ public class Shredder : MonoBehaviour
 
     private void OnDrawGizmos()
     {
+        var collider = GetComponent<BoxCollider2D>();
+
         Gizmos.color = new Color(1.0f, 0.0f, 0.0f, 0.3f);
-        Gizmos.DrawCube(transform.position, transform.localScale);
+        var position = transform.position + new Vector3(collider.offset.x, collider.offset.y);
+        Gizmos.DrawCube(position, collider.size);
     }
 }

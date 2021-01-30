@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: LostCowType
   m_EditorClassIdentifier: 
   sprite: {fileID: 21300000, guid: a4c7d5023a51c574db4eb9006cf5d353, type: 3}
+  prefab: {fileID: 4846650661528490879, guid: 26da84d9e80ab9647890cc437170fad3, type: 3}
   itemName: LostCow

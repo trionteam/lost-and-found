@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 2349824646508039330}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.22832893, y: 0.22832893, z: 0.22832893}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4846650661528490850}
   m_RootOrder: 0
@@ -70,12 +70,13 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: e402b6d2caf53ca40a7f1901a45d2f08, type: 3}
+  m_Sprite: {fileID: -8553905588754145586, guid: cc8eb422cb8978046bbd6d28d5d167dc,
+    type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 10.67, y: 8}
+  m_Size: {x: 0.45, y: 0.346}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -141,7 +142,7 @@ GameObject:
   - component: {fileID: 4846650661528490849}
   - component: {fileID: 8975908378602496005}
   m_Layer: 11
-  m_Name: LostLuggage
+  m_Name: LostLuggage9
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -197,7 +198,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weight: 0
-  itemType: {fileID: 11400000, guid: 27371fb2c7b6a6240aa1260b989445fc, type: 2}
+  itemType: {fileID: 11400000, guid: c28b14d50d952794d8d52429083d7888, type: 2}
 --- !u!60 &8975908378602496005
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -211,7 +212,7 @@ PolygonCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -0.005, y: -0.065}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -223,13 +224,12 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 0.29898614, y: -0.21332462}
-      - {x: 0.26784325, y: 0.16595854}
-      - {x: 0.059796534, y: 0.18084744}
-      - {x: 0.036443807, y: 0.2376982}
-      - {x: -0.098325744, y: 0.23337929}
-      - {x: -0.11080506, y: 0.16975036}
-      - {x: -0.27385658, y: 0.16856751}
-      - {x: -0.29967362, y: 0.13404343}
-      - {x: -0.2870869, y: -0.23554999}
-      - {x: 0.22777604, y: -0.23770392}
+    - - {x: 0.2272506, y: -0.11172053}
+      - {x: 0.22838625, y: 0.06795735}
+      - {x: 0.2237247, y: 0.17579637}
+      - {x: 0.067139044, y: 0.17533547}
+      - {x: 0.064617045, y: 0.23801196}
+      - {x: -0.07002269, y: 0.23857655}
+      - {x: -0.07298214, y: 0.17549765}
+      - {x: -0.22054797, y: 0.17783219}
+      - {x: -0.2216579, y: -0.109646365}

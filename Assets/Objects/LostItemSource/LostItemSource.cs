@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class LostItemSource : MonoBehaviour
 {
-    public GameObject[] lostItemPrefabs;
+    public GlobalItemQueue globalItemQueue;
 
     public float minPeriod;
     public float maxPeriod;
@@ -14,11 +14,7 @@ public class LostItemSource : MonoBehaviour
 
     private void Awake()
     {
-        Debug.Assert(lostItemPrefabs != null);
-        foreach(var lostItem in lostItemPrefabs)
-        {
-            Debug.Assert(lostItem != null);
-        }
+        Debug.Assert(globalItemQueue != null);
     }
 
     private void Start()
@@ -36,8 +32,7 @@ public class LostItemSource : MonoBehaviour
 
     private void DropItem()
     {
-        int itemIndex = Random.Range(0, lostItemPrefabs.Length);
-        var itemPrefab = lostItemPrefabs[itemIndex];
+        var itemPrefab = globalItemQueue.NextLostItem().prefab;
 
         var item = Instantiate<GameObject>(itemPrefab, transform);
         var rigidBody = item.GetComponent<Rigidbody2D>();

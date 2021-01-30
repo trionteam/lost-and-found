@@ -43,10 +43,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de5b473ef60de074f9044a9faf48883c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lostItemPrefabs:
-  - {fileID: 4846650661528490879, guid: c3561d2506b23434aacc8e2500bfb55f, type: 3}
-  - {fileID: 4846650661528490879, guid: 26da84d9e80ab9647890cc437170fad3, type: 3}
-  - {fileID: 4846650661528490879, guid: 5b65b73c5a7931b4eb09653c40fa1cf0, type: 3}
+  lostItems: {fileID: 11400000, guid: a13831d2cc9b2be4eabe1a032d97bdc8, type: 2}
   minPeriod: 2
   maxPeriod: 5
   nextItemDropTime: 0

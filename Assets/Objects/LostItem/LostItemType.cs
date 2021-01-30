@@ -7,5 +7,9 @@ public class LostItemType : ScriptableObject
 {
     public Sprite sprite;
 
+    public GameObject prefab;
+
     public string itemName;
+
+    public int score = 100;
 }

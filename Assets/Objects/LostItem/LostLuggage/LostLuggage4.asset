@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0ee355fc159d784bab1552ea01bb241, type: 3}
+  m_Name: LostLuggage4
+  m_EditorClassIdentifier: 
+  sprite: {fileID: 1179649862910600658, guid: cc8eb422cb8978046bbd6d28d5d167dc, type: 3}
+  prefab: {fileID: 4846650661528490879, guid: 51c8c9e9c2f7b1444a6443f7c7f662aa, type: 3}
+  itemName: LostLuggage4

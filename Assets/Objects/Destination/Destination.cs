@@ -4,11 +4,14 @@ using UnityEngine;
 
 public class Destination : MonoBehaviour
 {
-    public LostItemType[] acceptedItemTypes;
+    public GlobalItemQueue globalItemQueue;
 
     private LostItemType _acceptedItemType;
 
     public SpriteRenderer _spriteRenderer;
+
+    public GameObject flashObject;
+    public float flashDurationSeconds = 0.2f;
     
     public LostItemType AcceptedItemType
     {
@@ -20,6 +23,12 @@ public class Destination : MonoBehaviour
         }
     }
 
+    private void Awake()
+    {
+        Debug.Assert(globalItemQueue != null);
+        Debug.Assert(flashObject != null);
+    }
+
     public void OnTriggerEnter2D(Collider2D collision)
     {
         LostItem item = collision.gameObject.GetComponent<LostItem>();
@@ -27,7 +36,15 @@ public class Destination : MonoBehaviour
         {
             item.Collect();
             PickNextItem();
+            StartCoroutine(FlashOnCollect());
         }
+    }
+
+    private IEnumerator FlashOnCollect()
+    {
+        flashObject.SetActive(true);
+        yield return new WaitForSeconds(flashDurationSeconds);
+        flashObject.SetActive(false);
     }
 
     private void Start()
@@ -37,8 +54,7 @@ public class Destination : MonoBehaviour
 
     void PickNextItem()
     {
-        int nextItemIndex = Random.Range(0, acceptedItemTypes.Length);
-        AcceptedItemType = acceptedItemTypes[nextItemIndex];
+        AcceptedItemType = globalItemQueue.NextSearchedItem();
     }
 
     void UpdateSprite()

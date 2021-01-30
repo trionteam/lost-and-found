@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 2349824646508039330}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.22832893, y: 0.22832893, z: 0.22832893}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4846650661528490850}
   m_RootOrder: 0
@@ -70,12 +70,13 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 82597204d226ea749b3b72faeac928de, type: 3}
+  m_Sprite: {fileID: 5138701021501610736, guid: cc8eb422cb8978046bbd6d28d5d167dc,
+    type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 10.67, y: 8}
+  m_Size: {x: 0.45, y: 0.346}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -141,7 +142,7 @@ GameObject:
   - component: {fileID: 4846650661528490849}
   - component: {fileID: 8975908378602496005}
   m_Layer: 11
-  m_Name: LostCat
+  m_Name: LostLuggage3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -197,7 +198,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weight: 0
-  itemType: {fileID: 11400000, guid: d56a65fe6cd7cee4b910008d0aa68c6b, type: 2}
+  itemType: {fileID: 11400000, guid: 13ba26bee9956ed4fbbc0cd719a9c866, type: 2}
 --- !u!60 &8975908378602496005
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -211,7 +212,7 @@ PolygonCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -0.005, y: -0.065}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -223,23 +224,12 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: -0.082505986, y: 0.28274158}
-      - {x: -0.15349883, y: 0.31705853}
-      - {x: -0.20856844, y: 0.35615608}
-      - {x: -0.23714413, y: 0.32255152}
-      - {x: -0.25674164, y: 0.15525945}
-      - {x: -0.22280432, y: 0.0032186266}
-      - {x: -0.26818427, y: -0.15988374}
-      - {x: -0.27950507, y: -0.2994168}
-      - {x: -0.25007558, y: -0.34149247}
-      - {x: 0.17687863, y: -0.33710092}
-      - {x: 0.25092968, y: -0.27944604}
-      - {x: 0.28556836, y: -0.17481342}
-      - {x: 0.2489251, y: -0.06291252}
-      - {x: 0.20742077, y: -0.014767343}
-      - {x: 0.20202187, y: 0.06286121}
-      - {x: 0.25475538, y: 0.14711928}
-      - {x: 0.20559552, y: 0.18579367}
-      - {x: 0.14341618, y: 0.13340819}
-      - {x: 0.07818066, y: 0.22472903}
-      - {x: 0.058086343, y: 0.327788}
+    - - {x: 0.2272506, y: -0.11172053}
+      - {x: 0.22838625, y: 0.06795735}
+      - {x: 0.2237247, y: 0.17579637}
+      - {x: 0.067139044, y: 0.17533547}
+      - {x: 0.064617045, y: 0.23801196}
+      - {x: -0.07002269, y: 0.23857655}
+      - {x: -0.07298214, y: 0.17549765}
+      - {x: -0.22054797, y: 0.17783219}
+      - {x: -0.2216579, y: -0.109646365}
