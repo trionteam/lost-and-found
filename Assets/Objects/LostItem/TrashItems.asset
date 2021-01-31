@@ -12,4 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 016c68d4136830940b7f3bb01f9b54a9, type: 3}
   m_Name: TrashItems
   m_EditorClassIdentifier: 
-  lostItems: []
+  lostItems:
+  - {fileID: 11400000, guid: 3187bba4f17de854280229d5c5361686, type: 2}
+  - {fileID: 11400000, guid: a4b9d79ba98a7014d9b48a7a59cbaaa0, type: 2}
+  - {fileID: 11400000, guid: 8cd2509a961e2c2489c06eb7a58a82e2, type: 2}
+  - {fileID: 11400000, guid: 2fea49ad032aa2d42a58ad58e1cf4d1e, type: 2}

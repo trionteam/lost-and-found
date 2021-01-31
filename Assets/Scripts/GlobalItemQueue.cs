@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GlobalItemQueue : MonoBehaviour
 {
@@ -12,13 +13,40 @@ public class GlobalItemQueue : MonoBehaviour
     private List<LostItemType> _lostItemQueue;
     private List<bool> _lostItemInQueueSearched;
 
-    public int lostItemQueueSize = 16;
+    public Text healthDisplay;
+    public Text scoreDisplay;
 
-    public int Score { get; private set; }
-    public float Health 
+    public int lostItemQueueSize = 16;
+    public float initialHealth = 100.0f;
+
+    private int _score = 0;
+    public int Score 
+    {
+        get => _score;
+        private set
+        {
+            _score = value;
+            scoreDisplay.text = string.Format("{0}", value);
+        }
+    }
+
+    private float _health = 100.0f;
+    public float Health
+    {
+        get => _health;
+        private set
+        {
+            _health = value;
+            healthDisplay.text = string.Format("{0}", value);
+        }
+    }
 
     private void Awake()
     {
+        Debug.Assert(lostItems != null);
+        Debug.Assert(trashItems != null);
+        Debug.Assert(scoreDisplay != null);
+
         _allItemTypes = new List<LostItemType>();
         _allItemTypes.AddRange(lostItems.lostItems);
         _allItemTypes.AddRange(trashItems.lostItems);
@@ -67,12 +95,13 @@ public class GlobalItemQueue : MonoBehaviour
 
     public void ShredLostItem(LostItem item)
     {
+        Health = Mathf.Max(Health - item.itemType.healthDecrease, 0.0f);
         item.Shred();
     }
 
     public void CollectLostItem(LostItem item)
     {
-        Score += item.itemType.score;
+        Score += item.itemType.scoreIncrease;
         item.Collect();
     }
 }

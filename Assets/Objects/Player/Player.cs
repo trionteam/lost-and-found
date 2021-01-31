@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public float _movementSpeed = 1.0f;
-    public float _acceleration = 0.95f;
+    public float movementSpeed = 1.0f;
+    public float acceleration = 0.95f;
 
     public LostItem _heldObject = null;
     private Vector2 _heldObjectRelativePosition;
@@ -16,6 +16,10 @@ public class Player : MonoBehaviour
 
     private Vector2 _previousDelta;
 
+    public SpriteRenderer sprite;
+    public Transform picker;
+    public float spriteMaxRotationDeg = 15.0f;
+
     private void Awake()
     {
         _rigidBody = GetComponent<Rigidbody2D>();
@@ -24,19 +28,16 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
-        float xVelocity = _movementSpeed * Input.GetAxis("Horizontal");
-        float yVelocity = _movementSpeed * Input.GetAxis("Vertical");
-        var delta = new Vector2(Time.fixedDeltaTime * xVelocity,
-                                Time.fixedDeltaTime * yVelocity);
-        delta = Vector2.Lerp(delta, _previousDelta, _acceleration);
-        var newPosition = _rigidBody.position + delta;
-        _rigidBody.MovePosition(newPosition);
-        _previousDelta = delta;
+        float xVelocity = movementSpeed * Input.GetAxis("Horizontal");
+        float yVelocity = movementSpeed * Input.GetAxis("Vertical");
+        var newVelocity = new Vector2(xVelocity, yVelocity);
+        _rigidBody.velocity = Vector2.Lerp(newVelocity, _rigidBody.velocity, acceleration);
 
         if (_heldObject != null)
         {
             var rigidBody = _heldObject.GetComponent<Rigidbody2D>();
-            rigidBody.MovePosition(_rigidBody.position + _heldObjectRelativePosition);
+            // rigidBody.MovePosition(_rigidBody.position + _heldObjectRelativePosition);
+            rigidBody.MovePosition(picker.position);
         }
     }
     private void Update()
@@ -55,7 +56,7 @@ public class Player : MonoBehaviour
                 var lostItem = colliders[i].GetComponent<LostItem>();
                 if (lostItem == null) continue;
 
-                lostItem.Pickup();
+                lostItem.Pickup(this);
                 _heldObject = lostItem;
                 _heldObjectRelativePosition = colliders[i].attachedRigidbody.position - _rigidBody.position;
                 break;
@@ -65,6 +66,19 @@ public class Player : MonoBehaviour
         {
             _heldObject.Drop();
             _heldObject = null;
+        }
+
+        float xVelocity = _rigidBody.velocity.x;
+        float rotation = -spriteMaxRotationDeg * Mathf.Abs(xVelocity) / movementSpeed;
+        sprite.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, rotation);
+
+        if (xVelocity < 0.0f)
+        {
+            transform.localScale = new Vector3(-1.0f, 1.0f, 1.0f);
+        }
+        else if (xVelocity > 0.0f)
+        {
+            transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
         }
     }
 

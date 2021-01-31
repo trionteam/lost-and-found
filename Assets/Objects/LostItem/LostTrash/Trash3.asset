@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0ee355fc159d784bab1552ea01bb241, type: 3}
+  m_Name: Trash3
+  m_EditorClassIdentifier: 
+  sprite: {fileID: 4023381691866768133, guid: 670dfa96cf0ef7440b02839bbf8622e8, type: 3}
+  prefab: {fileID: 4846650661528490879, guid: 378c501d90521bf4692609216590bbec, type: 3}
+  itemName: Trash3
+  scoreIncrease: 0
+  healthDecrease: 0

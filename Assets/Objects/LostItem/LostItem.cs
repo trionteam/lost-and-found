@@ -10,6 +10,8 @@ public class LostItem : MonoBehaviour
 
     private Rigidbody2D _rigidBody;
 
+    private float _originalZ;
+
     private void Awake()
     {
         _rigidBody = GetComponent<Rigidbody2D>();
@@ -27,12 +29,15 @@ public class LostItem : MonoBehaviour
     {
         gameObject.layer = Layers.BeltItems;
         _rigidBody.freezeRotation = false;
+        transform.position = new Vector3(transform.position.x, transform.position.y, _originalZ);
     }
 
-    public void Pickup()
+    public void Pickup(Player player)
     {
         gameObject.layer = Layers.HeldItems;
         _rigidBody.freezeRotation = true;
+        _originalZ = transform.position.z;
+        transform.position = new Vector3(transform.position.x, transform.position.y, player.transform.position.z - 0.01f);
     }
 
     public void Shred()

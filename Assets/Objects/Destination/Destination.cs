@@ -34,7 +34,7 @@ public class Destination : MonoBehaviour
         LostItem item = collision.gameObject.GetComponent<LostItem>();
         if (item != null && item.itemType == _acceptedItemType)
         {
-            item.Collect();
+            globalItemQueue.CollectLostItem(item);
             PickNextItem();
             StartCoroutine(FlashOnCollect());
         }
