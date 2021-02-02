@@ -1,4 +1,6 @@
-﻿using UnityEditor;
+﻿#if UNITY_EDITOR
+using UnityEditor;
+#endif
 using UnityEngine;
 
 public class ConveyorBelt : MonoBehaviour
@@ -117,6 +119,7 @@ public class ConveyorBelt : MonoBehaviour
     }
 }
 
+#if UNITY_EDITOR
 [CustomEditor(typeof(ConveyorBelt))]
 public class ConveyorBeltEditor : Editor
 {
@@ -139,3 +142,4 @@ public class ConveyorBeltEditor : Editor
         belt.ResetWidth();
     }
 }
+#endif
