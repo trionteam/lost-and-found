@@ -199,6 +199,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weight: 0
   itemType: {fileID: 11400000, guid: 0059db85c3df5b14db02da41bbb9a4e3, type: 2}
+  _explosion: {fileID: 2993683982685924590, guid: fa85e5dfbd8b66b49baf54200f325706,
+    type: 3}
 --- !u!60 &8975908378602496005
 PolygonCollider2D:
   m_ObjectHideFlags: 0

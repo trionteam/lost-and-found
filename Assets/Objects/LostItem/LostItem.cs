@@ -8,6 +8,8 @@ public class LostItem : MonoBehaviour
 
     public LostItemType itemType;
 
+    public GameObject _explosion;
+
     private Rigidbody2D _rigidBody;
 
     private float _originalZ;
@@ -43,5 +45,6 @@ public class LostItem : MonoBehaviour
     public void Shred()
     {
         Destroy(gameObject);
+        Instantiate(_explosion, transform.position - 0.2f * Vector3.back, transform.rotation);
     }
 }

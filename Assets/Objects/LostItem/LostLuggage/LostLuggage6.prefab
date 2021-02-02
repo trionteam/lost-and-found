@@ -142,7 +142,7 @@ GameObject:
   - component: {fileID: 4846650661528490849}
   - component: {fileID: 8975908378602496005}
   m_Layer: 11
-  m_Name: LostLuggage2
+  m_Name: LostLuggage6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -199,6 +199,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weight: 0
   itemType: {fileID: 11400000, guid: 27371fb2c7b6a6240aa1260b989445fc, type: 2}
+  _explosion: {fileID: 2993683982685924590, guid: fa85e5dfbd8b66b49baf54200f325706,
+    type: 3}
 --- !u!60 &8975908378602496005
 PolygonCollider2D:
   m_ObjectHideFlags: 0
