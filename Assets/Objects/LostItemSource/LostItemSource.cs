@@ -32,13 +32,18 @@ public class LostItemSource : MonoBehaviour
 
     private void DropItem()
     {
-        var itemPrefab = globalItemQueue.NextLostItem().prefab;
+        var animator = GetComponent<Animator>();
+        animator.Play("Spit");
 
+        SetNextItemDropTime();
+    }
+
+    private void SpitItem()
+    {
+        var itemPrefab = globalItemQueue.NextLostItem().prefab;
         var item = Instantiate<GameObject>(itemPrefab, transform);
         var rigidBody = item.GetComponent<Rigidbody2D>();
         rigidBody.velocity = initialVelocity;
-
-        SetNextItemDropTime();
     }
 
     private void SetNextItemDropTime()
