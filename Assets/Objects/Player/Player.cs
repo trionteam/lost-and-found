@@ -38,6 +38,7 @@ public class Player : MonoBehaviour
             var rigidBody = _heldObject.GetComponent<Rigidbody2D>();
             // rigidBody.MovePosition(_rigidBody.position + _heldObjectRelativePosition);
             rigidBody.MovePosition(picker.position);
+            rigidBody.velocity = _rigidBody.velocity;
         }
     }
     private void Update()
