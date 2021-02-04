@@ -9,6 +9,9 @@ public class Destination : MonoBehaviour
     private LostItemType _acceptedItemType;
 
     public SpriteRenderer _spriteRenderer;
+    public SpriteRenderer _paperRenderer;
+
+    public float spriteSize = 0.7f;
 
     public GameObject flashObject;
     public float flashDurationSeconds = 0.2f;
@@ -42,9 +45,11 @@ public class Destination : MonoBehaviour
 
     private IEnumerator FlashOnCollect()
     {
-        flashObject.SetActive(true);
+        _paperRenderer.enabled = false;
+        _spriteRenderer.enabled = false;
         yield return new WaitForSeconds(flashDurationSeconds);
-        flashObject.SetActive(false);
+        _paperRenderer.enabled = true;
+        _spriteRenderer.enabled = true;
     }
 
     private void Start()
@@ -63,6 +68,6 @@ public class Destination : MonoBehaviour
         var size = sprite.bounds.size;
         var maxSize = Mathf.Max(size.x, size.y);
         _spriteRenderer.sprite = sprite;
-        _spriteRenderer.transform.localScale = new Vector3(1.0f / maxSize, 1.0f / maxSize);
+        _spriteRenderer.transform.localScale = new Vector3(spriteSize / maxSize, spriteSize / maxSize);
     }
 }
