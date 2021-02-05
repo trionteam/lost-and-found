@@ -13,5 +13,5 @@ public class LostItemType : ScriptableObject
 
     public int scoreIncrease = 100;
 
-    public float healthDecrease = 10.0f;
+    public int healthDecrease = 1;
 }

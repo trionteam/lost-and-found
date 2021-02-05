@@ -15,3 +15,5 @@ MonoBehaviour:
   sprite: {fileID: 7948155141460646090, guid: cc8eb422cb8978046bbd6d28d5d167dc, type: 3}
   prefab: {fileID: 4846650661528490879, guid: 64fe0f3b932df354db912d627d18c08e, type: 3}
   itemName: LostLuggage1
+  scoreIncrease: 100
+  healthDecrease: 1

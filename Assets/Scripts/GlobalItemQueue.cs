@@ -14,11 +14,15 @@ public class GlobalItemQueue : MonoBehaviour
     private List<LostItemType> _lostItemQueue;
     private List<bool> _lostItemInQueueSearched;
 
-    public Text healthDisplay;
     public TextMeshPro scoreDisplay;
 
     public int lostItemQueueSize = 16;
-    public float initialHealth = 100.0f;
+    public int initialHealth = 3;
+
+    public Collider2D dangerZone;
+
+    public Destination[] destinations;
+    public GameObject[] hearts;
 
     private int _score = 0;
     public int Score 
@@ -31,14 +35,22 @@ public class GlobalItemQueue : MonoBehaviour
         }
     }
 
-    private float _health = 100.0f;
-    public float Health
+    private int _health = 3;
+    public int Health
     {
         get => _health;
         private set
         {
             _health = value;
-            healthDisplay.text = string.Format("{0}", value);
+            var visibleHearts = Mathf.Min(hearts.Length, value);
+            for (int i = 0; i < visibleHearts; i++)
+            {
+                hearts[i].SetActive(true);
+            }
+            for (int i = visibleHearts; i < hearts.Length; i++)
+            {
+                hearts[i].SetActive(false);
+            }
         }
     }
 
@@ -59,6 +71,7 @@ public class GlobalItemQueue : MonoBehaviour
     private void Start()
     {
         Score = 0;
+        Health = initialHealth;
     }
 
     public LostItemType NextLostItem()
@@ -73,12 +86,14 @@ public class GlobalItemQueue : MonoBehaviour
     public LostItemType NextSearchedItem()
     {
         RefillQueue();
+        var inDangerZone = ItemsInDangerZone();
         for(; ;)
         {
             int itemIndex = Random.Range(0, _lostItemQueue.Count);
             if (_lostItemInQueueSearched[itemIndex]) continue;
             var item = _lostItemQueue[itemIndex];
             if (System.Array.IndexOf(trashItems.lostItems, item) >= 0) continue;
+            if (inDangerZone.Contains(item)) continue;
             _lostItemInQueueSearched[itemIndex] = true;
             return item;
         }
@@ -94,10 +109,42 @@ public class GlobalItemQueue : MonoBehaviour
         }
     }
 
+    public Destination ItemDestination(LostItem item)
+    {
+        foreach (var destination in destinations)
+        {
+            if (destination.AcceptedItemType == item.itemType) return destination;
+        }
+        return null;
+    }
+
     public void ShredLostItem(LostItem item)
     {
-        Health = Mathf.Max(Health - item.itemType.healthDecrease, 0.0f);
+        var itemDestination = ItemDestination(item);
+        if (itemDestination != null)
+        {
+            itemDestination.ItemShredded();
+            Health = Mathf.Max(Health - item.itemType.healthDecrease, 0);
+        }
         item.Shred();
+    }
+
+    private List<LostItemType> ItemsInDangerZone()
+    {
+        var list = new List<LostItemType>();
+
+        var filter = new ContactFilter2D();
+        filter.useTriggers = true;
+        filter.SetLayerMask(LayerMask.GetMask("BeltItems"));
+        var contacts = new Collider2D[64];
+        int numColliders = dangerZone.GetContacts(filter, contacts);
+        for (int i = 0; i < numColliders; ++i)
+        {
+            var lostItem = contacts[i].GetComponent<LostItem>();
+            if (lostItem == null) continue;
+            list.Add(lostItem.itemType);
+        }
+        return list;
     }
 
     public void CollectLostItem(LostItem item)

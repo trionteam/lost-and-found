@@ -11,9 +11,10 @@ public class Destination : MonoBehaviour
     public SpriteRenderer _spriteRenderer;
     public SpriteRenderer _paperRenderer;
 
+    public DustCloud _cloudPrefab;
+
     public float spriteSize = 0.7f;
 
-    public GameObject flashObject;
     public float flashDurationSeconds = 0.2f;
     
     public LostItemType AcceptedItemType
@@ -29,7 +30,8 @@ public class Destination : MonoBehaviour
     private void Awake()
     {
         Debug.Assert(globalItemQueue != null);
-        Debug.Assert(flashObject != null);
+        Debug.Assert(_spriteRenderer != null);
+        Debug.Assert(_paperRenderer != null);
     }
 
     public void OnTriggerEnter2D(Collider2D collision)
@@ -41,6 +43,19 @@ public class Destination : MonoBehaviour
             PickNextItem();
             StartCoroutine(FlashOnCollect());
         }
+    }
+
+    private IEnumerator FlashOnShred()
+    {
+        var cloud = Instantiate(_cloudPrefab, transform);
+        cloud.transform.localScale = new Vector3(2.0f, 2.0f, 2.0f);
+        _spriteRenderer.enabled = false;
+        yield return new WaitForSeconds(0.2f);
+        _paperRenderer.enabled = false;
+
+        yield return new WaitForSeconds(0.35f);
+        _paperRenderer.enabled = true;
+        _spriteRenderer.enabled = true;
     }
 
     private IEnumerator FlashOnCollect()
@@ -60,6 +75,12 @@ public class Destination : MonoBehaviour
     void PickNextItem()
     {
         AcceptedItemType = globalItemQueue.NextSearchedItem();
+    }
+
+    public void ItemShredded()
+    {
+        StartCoroutine(FlashOnShred());
+        PickNextItem();
     }
 
     void UpdateSprite()

@@ -15,3 +15,5 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: 82597204d226ea749b3b72faeac928de, type: 3}
   prefab: {fileID: 4846650661528490879, guid: 5b65b73c5a7931b4eb09653c40fa1cf0, type: 3}
   itemName: LostCat
+  scoreIncrease: 100
+  healthDecrease: 1

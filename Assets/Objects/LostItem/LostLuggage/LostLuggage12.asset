@@ -16,4 +16,4 @@ MonoBehaviour:
   prefab: {fileID: 4846650661528490879, guid: 607823d03e8f2134ba3d4c36358235b4, type: 3}
   itemName: LostLuggage12
   scoreIncrease: 100
-  healthDecrease: 10
+  healthDecrease: 1
