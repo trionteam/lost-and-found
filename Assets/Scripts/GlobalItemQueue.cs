@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -22,6 +23,8 @@ public class GlobalItemQueue : MonoBehaviour
     private List<LostItemType> _lostItemQueue;
     private List<bool> _lostItemInQueueSearched;
 
+    private List<LostItemType> _itemsOnScreen = new List<LostItemType>();
+
     public TextMeshPro scoreDisplay;
 
     public int lostItemQueueSize = 16;
@@ -38,9 +41,12 @@ public class GlobalItemQueue : MonoBehaviour
     private GameState _state;
 
     public Player player;
+    public float screenProbability = 0.5f;
+
+    public InputField difficultyEditor;
 
     private int _score = 0;
-    public int Score 
+    public int Score
     {
         get => _score;
         private set
@@ -87,6 +93,8 @@ public class GlobalItemQueue : MonoBehaviour
     {
         Score = 0;
         Health = initialHealth;
+        _itemsOnScreen.Clear();
+        difficultyEditor.text = string.Format("{0}", screenProbability);
         ShowIntroScreen();
     }
 
@@ -111,6 +119,21 @@ public class GlobalItemQueue : MonoBehaviour
         _state = GameState.EndScreen;
         endScreen.gameObject.SetActive(true);
         player.gameObject.SetActive(false);
+    }
+
+    public void AdjustDifficulty()
+    {
+        float difficulty = 0.0f;
+        if (float.TryParse(difficultyEditor.text, out difficulty)
+            && difficulty >= 0.0f
+            && difficulty <= 1.0f)
+        {
+            screenProbability = difficulty;
+        }
+        else
+        {
+            difficultyEditor.text = string.Format("{0}", screenProbability);
+        }
     }
 
     private void Update()
@@ -141,6 +164,9 @@ public class GlobalItemQueue : MonoBehaviour
         var itemType = _lostItemQueue[0];
         _lostItemQueue.RemoveAt(0);
         _lostItemInQueueSearched.RemoveAt(0);
+
+        _itemsOnScreen.Add(itemType);
+
         return itemType;
     }
 
@@ -148,7 +174,27 @@ public class GlobalItemQueue : MonoBehaviour
     {
         RefillQueue();
         var inDangerZone = ItemsInDangerZone();
-        for(; ;)
+
+        var isOnScreen = Random.Range(0.0f, 1.0f);
+        if (isOnScreen < screenProbability)
+        {
+            var itemsToPickFrom = new List<LostItemType>(
+                _itemsOnScreen.Where(item => lostItems.lostItems.Contains(item)));
+            foreach (var destination in destinations)
+            {
+                itemsToPickFrom.Remove(destination.AcceptedItemType);
+            }
+            foreach (var item in inDangerZone)
+            {
+                itemsToPickFrom.Remove(item);
+            }
+            if (itemsToPickFrom.Count > 0)
+            {
+                var index = Random.Range(0, itemsToPickFrom.Count);
+                return itemsToPickFrom[index];
+            }
+        }
+        for (; ; )
         {
             int itemIndex = Random.Range(0, _lostItemQueue.Count);
             if (_lostItemInQueueSearched[itemIndex]) continue;
@@ -192,6 +238,7 @@ public class GlobalItemQueue : MonoBehaviour
             }
         }
         item.Shred();
+        _itemsOnScreen.Remove(item.itemType);
     }
 
     private List<LostItemType> ItemsInDangerZone()
@@ -216,5 +263,6 @@ public class GlobalItemQueue : MonoBehaviour
     {
         Score += item.itemType.scoreIncrease;
         item.Collect();
+        _itemsOnScreen.Remove(item.itemType);
     }
 }
