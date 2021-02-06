@@ -179,14 +179,11 @@ public class GlobalItemQueue : MonoBehaviour
         if (isOnScreen < screenProbability)
         {
             var itemsToPickFrom = new List<LostItemType>(
-                _itemsOnScreen.Where(item => lostItems.lostItems.Contains(item)));
+                _itemsOnScreen.Where(item => lostItems.lostItems.Contains(item) &&
+                                             !inDangerZone.Contains(item)));
             foreach (var destination in destinations)
             {
                 itemsToPickFrom.Remove(destination.AcceptedItemType);
-            }
-            foreach (var item in inDangerZone)
-            {
-                itemsToPickFrom.Remove(item);
             }
             if (itemsToPickFrom.Count > 0)
             {
