@@ -2,10 +2,18 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GlobalItemQueue : MonoBehaviour
 {
+    private enum GameState
+    {
+        StartScreen,
+        Game,
+        EndScreen
+    }
+
     public LostItemCollection lostItems;
     public LostItemCollection trashItems;
 
@@ -23,6 +31,13 @@ public class GlobalItemQueue : MonoBehaviour
 
     public Destination[] destinations;
     public GameObject[] hearts;
+
+    public Image startScreen;
+    public Image endScreen;
+
+    private GameState _state;
+
+    public Player player;
 
     private int _score = 0;
     public int Score 
@@ -72,6 +87,52 @@ public class GlobalItemQueue : MonoBehaviour
     {
         Score = 0;
         Health = initialHealth;
+        ShowIntroScreen();
+    }
+
+    private void ShowIntroScreen()
+    {
+        player.gameObject.SetActive(false);
+        _state = GameState.StartScreen;
+        Time.timeScale = 0.0f;
+        startScreen.gameObject.SetActive(true);
+    }
+
+    private void StartGame()
+    {
+        _state = GameState.Game;
+        Time.timeScale = 1.0f;
+        startScreen.gameObject.SetActive(false);
+        player.gameObject.SetActive(true);
+    }
+
+    private void EndGame()
+    {
+        _state = GameState.EndScreen;
+        endScreen.gameObject.SetActive(true);
+        player.gameObject.SetActive(false);
+    }
+
+    private void Update()
+    {
+        switch (_state)
+        {
+            case GameState.StartScreen:
+                if (Input.anyKeyDown)
+                {
+                    StartGame();
+                }
+                break;
+            case GameState.Game:
+                break;
+            case GameState.EndScreen:
+                if (Input.anyKeyDown)
+                {
+                    // Reload the current scene to restart the game.
+                    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+                }
+                break;
+        }
     }
 
     public LostItemType NextLostItem()
@@ -125,6 +186,10 @@ public class GlobalItemQueue : MonoBehaviour
         {
             itemDestination.ItemShredded();
             Health = Mathf.Max(Health - item.itemType.healthDecrease, 0);
+            if (Health == 0)
+            {
+                EndGame();
+            }
         }
         item.Shred();
     }
