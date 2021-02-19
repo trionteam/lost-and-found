@@ -42,8 +42,21 @@ public class GlobalItemQueue : MonoBehaviour
 
     public Player player;
     public float screenProbability = 0.5f;
+    public float trashProbability = 0.3f;
 
     public InputField difficultyEditor;
+    public InputField trashProbabilityEditor;
+    public Toggle uniqueItemsCheckbox;
+
+    public bool UniqueItems
+    {
+        get
+        {
+            if (uniqueItemsCheckbox != null)
+                return uniqueItemsCheckbox.isOn;
+            return false;
+        }
+    }
 
     private int _score = 0;
     public int Score
@@ -134,6 +147,21 @@ public class GlobalItemQueue : MonoBehaviour
         {
             difficultyEditor.text = string.Format("{0}", screenProbability);
         }
+
+        float parsedTrashProbability = 0.0f;
+        if (float.TryParse(trashProbabilityEditor.text, out parsedTrashProbability)
+            && parsedTrashProbability >= 0.0f
+            && parsedTrashProbability <= 1.0f)
+        {
+            trashProbability = parsedTrashProbability;
+        }
+        else
+        {
+            trashProbabilityEditor.text = string.Format("{0}", trashProbability);
+        }
+
+        _lostItemQueue.Clear();
+        RefillQueue();
     }
 
     private void Update()
@@ -178,9 +206,17 @@ public class GlobalItemQueue : MonoBehaviour
         var isOnScreen = Random.Range(0.0f, 1.0f);
         if (isOnScreen < screenProbability)
         {
-            var itemsToPickFrom = new List<LostItemType>(
-                _itemsOnScreen.Where(item => lostItems.lostItems.Contains(item) &&
-                                             !inDangerZone.Contains(item)));
+            var itemsToPickFromQuery = _itemsOnScreen.Where(
+                item => lostItems.lostItems.Contains(item) &&
+                        !inDangerZone.Contains(item));
+            if (UniqueItems)
+            {
+                itemsToPickFromQuery = itemsToPickFromQuery.Where(
+                    item => ItemDestination(item) == null);
+            }
+            var itemsToPickFrom = new List<LostItemType>(itemsToPickFromQuery);
+
+
             foreach (var destination in destinations)
             {
                 itemsToPickFrom.Remove(destination.AcceptedItemType);
@@ -191,33 +227,68 @@ public class GlobalItemQueue : MonoBehaviour
                 return itemsToPickFrom[index];
             }
         }
-        for (; ; )
+        for (int iteration = 0; iteration < lostItemQueueSize; iteration++)
         {
             int itemIndex = Random.Range(0, _lostItemQueue.Count);
             if (_lostItemInQueueSearched[itemIndex]) continue;
             var item = _lostItemQueue[itemIndex];
-            if (System.Array.IndexOf(trashItems.lostItems, item) >= 0) continue;
+            if (trashItems.lostItems.IndexOf(item) >= 0) continue;
             if (inDangerZone.Contains(item)) continue;
+            if (UniqueItems && ItemDestination(item) != null) continue;
             _lostItemInQueueSearched[itemIndex] = true;
             return item;
         }
+        for (int iteration = 0; iteration < lostItems.lostItems.Count; ++iteration)
+        {
+            var itemIndex = Random.Range(0, lostItems.lostItems.Count);
+            var item = lostItems.lostItems[itemIndex];
+            if (inDangerZone.Contains(item)) continue;
+            if (UniqueItems && ItemDestination(item) != null) continue;
+            return item;
+        }
+        return lostItems.lostItems[Random.Range(0, lostItems.lostItems.Count)];
     }
 
     private void RefillQueue()
     {
+        IEnumerable<LostItemType> itemsToPickFromQuery = lostItems.lostItems;
+        if (UniqueItems)
+        {
+            itemsToPickFromQuery = itemsToPickFromQuery.Where(
+                item => trashItems.lostItems.Contains(item) ||
+                        !(_itemsOnScreen.Contains(item) ||
+                          _lostItemQueue.Contains(item))).ToList();
+        }
+        var itemsToPickFrom = itemsToPickFromQuery.ToList();
         for (int i = _lostItemQueue.Count; i < lostItemQueueSize; ++i)
         {
-            int nextItemIndex = Random.Range(0, _allItemTypes.Count);
-            _lostItemQueue.Add(_allItemTypes[nextItemIndex]);
+            var isTrash = Random.Range(0.0f, 1.0f) < trashProbability;
+            LostItemType itemType = null;
+            if (!isTrash && itemsToPickFrom.Count > 0)
+            {
+                int nextItemIndex = Random.Range(0, itemsToPickFrom.Count);
+                itemType = itemsToPickFrom[nextItemIndex];
+                itemsToPickFrom.RemoveAt(nextItemIndex);
+            }
+            if (itemType == null)
+            {
+                var itemIndex = Random.Range(0, trashItems.lostItems.Count);
+                itemType = trashItems.lostItems[itemIndex];
+            }
+            _lostItemQueue.Add(itemType);
             _lostItemInQueueSearched.Add(false);
         }
     }
 
     public Destination ItemDestination(LostItem item)
     {
+        return ItemDestination(item.itemType);
+    }
+    public Destination ItemDestination(LostItemType itemType)
+    {
         foreach (var destination in destinations)
         {
-            if (destination.AcceptedItemType == item.itemType) return destination;
+            if (destination.AcceptedItemType == itemType) return destination;
         }
         return null;
     }
