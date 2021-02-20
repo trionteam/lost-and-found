@@ -8,13 +8,6 @@ using UnityEngine.UI;
 
 public class GlobalItemQueue : MonoBehaviour
 {
-    private enum GameState
-    {
-        StartScreen,
-        Game,
-        EndScreen
-    }
-
     public LostItemCollection lostItems;
     public LostItemCollection trashItems;
 
@@ -34,11 +27,6 @@ public class GlobalItemQueue : MonoBehaviour
 
     public Destination[] destinations;
     public GameObject[] hearts;
-
-    public Image startScreen;
-    public Image endScreen;
-
-    private GameState _state;
 
     public Player player;
     public float screenProbability = 0.5f;
@@ -108,30 +96,6 @@ public class GlobalItemQueue : MonoBehaviour
         Health = initialHealth;
         _itemsOnScreen.Clear();
         difficultyEditor.text = string.Format("{0}", screenProbability);
-        ShowIntroScreen();
-    }
-
-    private void ShowIntroScreen()
-    {
-        player.gameObject.SetActive(false);
-        _state = GameState.StartScreen;
-        Time.timeScale = 0.0f;
-        startScreen.gameObject.SetActive(true);
-    }
-
-    private void StartGame()
-    {
-        _state = GameState.Game;
-        Time.timeScale = 1.0f;
-        startScreen.gameObject.SetActive(false);
-        player.gameObject.SetActive(true);
-    }
-
-    private void EndGame()
-    {
-        _state = GameState.EndScreen;
-        endScreen.gameObject.SetActive(true);
-        player.gameObject.SetActive(false);
     }
 
     public void AdjustDifficulty()
@@ -162,28 +126,6 @@ public class GlobalItemQueue : MonoBehaviour
 
         _lostItemQueue.Clear();
         RefillQueue();
-    }
-
-    private void Update()
-    {
-        switch (_state)
-        {
-            case GameState.StartScreen:
-                if (Input.anyKeyDown)
-                {
-                    StartGame();
-                }
-                break;
-            case GameState.Game:
-                break;
-            case GameState.EndScreen:
-                if (Input.anyKeyDown)
-                {
-                    // Reload the current scene to restart the game.
-                    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-                }
-                break;
-        }
     }
 
     public LostItemType NextLostItem()
@@ -302,7 +244,7 @@ public class GlobalItemQueue : MonoBehaviour
             Health = Mathf.Max(Health - item.itemType.healthDecrease, 0);
             if (Health == 0)
             {
-                EndGame();
+                // EndGame();
             }
         }
         item.Shred();
