@@ -203,18 +203,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &18912346 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4070468500238313386, guid: 02a879b6db5df7b49992b14e98429bc0,
-    type: 3}
-  m_PrefabInstance: {fileID: 4070468500010985571}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 56e89e7b930dab244af0fb8d3b2c3582, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &18912349 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4070468500238313391, guid: 02a879b6db5df7b49992b14e98429bc0,
@@ -603,7 +591,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 434.71973, y: -30.529297}
+  m_AnchoredPosition: {x: 434.71973, y: -30.529358}
   m_SizeDelta: {x: 370.7774, y: 33.358982}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &150087866
@@ -1271,6 +1259,13 @@ MonoBehaviour:
   _startScreen: {fileID: 146853903}
   _endScreen: {fileID: 1837726461}
   _pauseScreen: {fileID: 2126879448}
+  _hearts:
+  - {fileID: 1888684166}
+  - {fileID: 2650271}
+  - {fileID: 622160536}
+  _scoreDisplay: {fileID: 1264042684}
+  _globalQueue: {fileID: 1801041843}
+  _initialHealth: 3
 --- !u!1 &405187693
 GameObject:
   m_ObjectHideFlags: 0
@@ -1709,7 +1704,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 130.2998, y: -32.44507}
+  m_AnchoredPosition: {x: 130.2998, y: -32.44513}
   m_SizeDelta: {x: 225.43497, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &486818341
@@ -3456,7 +3451,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 386843460}
-        m_MethodName: EndGame
+        m_MethodName: ExitGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4215,18 +4210,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1095443896 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4070468500238313386, guid: 02a879b6db5df7b49992b14e98429bc0,
-    type: 3}
-  m_PrefabInstance: {fileID: 339950362}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 56e89e7b930dab244af0fb8d3b2c3582, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1095443899 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4070468500238313391, guid: 02a879b6db5df7b49992b14e98429bc0,
@@ -5565,18 +5548,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &1342828280 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4070468500238313386, guid: 02a879b6db5df7b49992b14e98429bc0,
-    type: 3}
-  m_PrefabInstance: {fileID: 1251203148}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 56e89e7b930dab244af0fb8d3b2c3582, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1342828283 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4070468500238313391, guid: 02a879b6db5df7b49992b14e98429bc0,
@@ -6275,19 +6246,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lostItems: {fileID: 11400000, guid: a13831d2cc9b2be4eabe1a032d97bdc8, type: 2}
   trashItems: {fileID: 11400000, guid: 2aea430ab3287f946988c75e69e04e0a, type: 2}
-  scoreDisplay: {fileID: 1264042684}
   lostItemQueueSize: 4
   initialHealth: 3
   dangerZone: {fileID: 1801041844}
-  destinations:
-  - {fileID: 18912346}
-  - {fileID: 1095443896}
-  - {fileID: 1342828280}
-  hearts:
-  - {fileID: 1888684166}
-  - {fileID: 2650271}
-  - {fileID: 622160536}
-  player: {fileID: 494923984}
   screenProbability: 0.5
   trashProbability: 0.3
   difficultyEditor: {fileID: 150087866}

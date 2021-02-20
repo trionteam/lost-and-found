@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using TMPro;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -24,13 +25,37 @@ public class GameController : MonoBehaviour
     [SerializeField]
     private GameObject _pauseScreen;
 
-    // Start is called before the first frame update
+    [SerializeField]
+    private GameObject[] _hearts;
+    [SerializeField]
+    private TextMeshPro _scoreDisplay;
+
+    [SerializeField]
+    private GlobalItemQueue _globalQueue;
+
+    [SerializeField]
+    private int _initialHealth = 3;
+
+    private int _score = 0;
+    private int _health = 0;
+
+    private void Awake()
+    {
+        Debug.Assert(_globalQueue != null);
+        _globalQueue.OnLostItemShredded += OnLostItemShredded;
+        _globalQueue.OnItemFound += OnItemFound;
+
+        Debug.Assert(_scoreDisplay != null);
+    }
+
     void Start()
     {
+        _health = _initialHealth;
+        _score = 0;
+        _scoreDisplay.text = "0";
         ShowIntroScreen();
     }
 
-    // Update is called once per frame
     void Update()
     {
         switch (_state)
@@ -50,8 +75,7 @@ public class GameController : MonoBehaviour
             case GameState.EndScreen:
                 if (Input.anyKeyDown)
                 {
-                    // Reload the current scene to restart the game.
-                    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+                    RestartGame();
                 }
                 break;
             case GameState.Paused:
@@ -93,7 +117,7 @@ public class GameController : MonoBehaviour
         _pauseScreen.SetActive(false);
     }
 
-    public void EndGame()
+    private void EndGame()
     {
         if (_state == GameState.Paused)
         {
@@ -102,5 +126,46 @@ public class GameController : MonoBehaviour
         _state = GameState.EndScreen;
         _endScreen.SetActive(true);
         _player.gameObject.SetActive(false);
+    }
+
+    public void RestartGame()
+    {
+        // Reload the current scene to restart the game.
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void ExitGame()
+    {
+        Application.Quit();
+    }
+
+    private void OnItemFound(LostItemType itemType)
+    {
+        _score += itemType.scoreIncrease;
+        _scoreDisplay.text = string.Format("{0}", _score);
+    }
+
+    private void OnLostItemShredded(LostItemType itemType)
+    {
+        // Update the current health.
+        _health = Mathf.Max(0, _health - itemType.healthDecrease);
+
+        // Update the life indicator in the HUD.
+        // TODO(ondrasej): Move this code to the HUD.
+        var visibleHearts = Mathf.Min(_hearts.Length, _health);
+        for (int i = 0; i < visibleHearts; i++)
+        {
+            _hearts[i].SetActive(true);
+        }
+        for (int i = visibleHearts; i < _hearts.Length; i++)
+        {
+            _hearts[i].SetActive(false);
+        }
+
+        // End the game if needed.
+        if (_health == 0)
+        {
+            EndGame();
+        }
     }
 }

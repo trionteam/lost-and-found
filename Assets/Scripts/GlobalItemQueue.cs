@@ -8,6 +8,8 @@ using UnityEngine.UI;
 
 public class GlobalItemQueue : MonoBehaviour
 {
+    public delegate void ItemEventDelegate(LostItemType itemType);
+
     public LostItemCollection lostItems;
     public LostItemCollection trashItems;
 
@@ -18,23 +20,22 @@ public class GlobalItemQueue : MonoBehaviour
 
     private List<LostItemType> _itemsOnScreen = new List<LostItemType>();
 
-    public TextMeshPro scoreDisplay;
-
     public int lostItemQueueSize = 16;
     public int initialHealth = 3;
 
     public Collider2D dangerZone;
 
-    public Destination[] destinations;
-    public GameObject[] hearts;
+    private Destination[] _destinations;
 
-    public Player player;
     public float screenProbability = 0.5f;
     public float trashProbability = 0.3f;
 
     public InputField difficultyEditor;
     public InputField trashProbabilityEditor;
     public Toggle uniqueItemsCheckbox;
+
+    public event ItemEventDelegate OnItemFound;
+    public event ItemEventDelegate OnLostItemShredded;
 
     public bool UniqueItems
     {
@@ -46,41 +47,10 @@ public class GlobalItemQueue : MonoBehaviour
         }
     }
 
-    private int _score = 0;
-    public int Score
-    {
-        get => _score;
-        private set
-        {
-            _score = value;
-            scoreDisplay.text = string.Format("{0}", value);
-        }
-    }
-
-    private int _health = 3;
-    public int Health
-    {
-        get => _health;
-        private set
-        {
-            _health = value;
-            var visibleHearts = Mathf.Min(hearts.Length, value);
-            for (int i = 0; i < visibleHearts; i++)
-            {
-                hearts[i].SetActive(true);
-            }
-            for (int i = visibleHearts; i < hearts.Length; i++)
-            {
-                hearts[i].SetActive(false);
-            }
-        }
-    }
-
     private void Awake()
     {
         Debug.Assert(lostItems != null);
         Debug.Assert(trashItems != null);
-        Debug.Assert(scoreDisplay != null);
 
         _allItemTypes = new List<LostItemType>();
         _allItemTypes.AddRange(lostItems.lostItems);
@@ -88,12 +58,12 @@ public class GlobalItemQueue : MonoBehaviour
 
         _lostItemQueue = new List<LostItemType>(lostItemQueueSize);
         _lostItemInQueueSearched = new List<bool>(lostItemQueueSize);
+
+        _destinations = FindObjectsOfType<Destination>();
     }
 
     private void Start()
     {
-        Score = 0;
-        Health = initialHealth;
         _itemsOnScreen.Clear();
         difficultyEditor.text = string.Format("{0}", screenProbability);
     }
@@ -159,7 +129,7 @@ public class GlobalItemQueue : MonoBehaviour
             var itemsToPickFrom = new List<LostItemType>(itemsToPickFromQuery);
 
 
-            foreach (var destination in destinations)
+            foreach (var destination in _destinations)
             {
                 itemsToPickFrom.Remove(destination.AcceptedItemType);
             }
@@ -228,7 +198,7 @@ public class GlobalItemQueue : MonoBehaviour
     }
     public Destination ItemDestination(LostItemType itemType)
     {
-        foreach (var destination in destinations)
+        foreach (var destination in _destinations)
         {
             if (destination.AcceptedItemType == itemType) return destination;
         }
@@ -241,10 +211,11 @@ public class GlobalItemQueue : MonoBehaviour
         if (itemDestination != null)
         {
             itemDestination.ItemShredded();
-            Health = Mathf.Max(Health - item.itemType.healthDecrease, 0);
-            if (Health == 0)
+
+            var handler = OnLostItemShredded;
+            if (handler != null)
             {
-                // EndGame();
+                handler(item.itemType);
             }
         }
         item.Shred();
@@ -271,8 +242,13 @@ public class GlobalItemQueue : MonoBehaviour
 
     public void CollectLostItem(LostItem item)
     {
-        Score += item.itemType.scoreIncrease;
         item.Collect();
         _itemsOnScreen.Remove(item.itemType);
+
+        var handler = OnItemFound;
+        if (handler != null)
+        {
+            handler(item.itemType);
+        }
     }
 }
