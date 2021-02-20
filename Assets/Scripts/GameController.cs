@@ -16,22 +16,22 @@ public class GameController : MonoBehaviour
     private GameState _state;
 
     [SerializeField]
-    private Player _player;
+    private Player _player = null;
 
     [SerializeField]
-    private GameObject _startScreen;
+    private GameObject _startScreen = null;
     [SerializeField]
-    private GameObject _endScreen;
+    private GameObject _endScreen = null;
     [SerializeField]
-    private GameObject _pauseScreen;
+    private GameObject _pauseScreen = null;
 
     [SerializeField]
-    private GameObject[] _hearts;
+    private GameObject[] _hearts = null;
     [SerializeField]
-    private TextMeshPro _scoreDisplay;
+    private TextMeshPro _scoreDisplay = null;
 
     [SerializeField]
-    private GlobalItemQueue _globalQueue;
+    private GlobalItemQueue _globalQueue = null;
 
     [SerializeField]
     private int _initialHealth = 3;

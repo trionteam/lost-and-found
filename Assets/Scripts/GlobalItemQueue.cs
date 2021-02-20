@@ -212,11 +212,7 @@ public class GlobalItemQueue : MonoBehaviour
         {
             itemDestination.ItemShredded();
 
-            var handler = OnLostItemShredded;
-            if (handler != null)
-            {
-                handler(item.itemType);
-            }
+            OnLostItemShredded?.Invoke(item.itemType);
         }
         item.Shred();
         _itemsOnScreen.Remove(item.itemType);
@@ -245,10 +241,6 @@ public class GlobalItemQueue : MonoBehaviour
         item.Collect();
         _itemsOnScreen.Remove(item.itemType);
 
-        var handler = OnItemFound;
-        if (handler != null)
-        {
-            handler(item.itemType);
-        }
+        OnItemFound?.Invoke(item.itemType);
     }
 }
