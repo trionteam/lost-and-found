@@ -11,6 +11,10 @@ public class LostItemCollection : ScriptableObject
     {
         Debug.Assert(lostItems != null);
         Debug.Assert(lostItems.Count > 0);
+        foreach (var item in lostItems)
+        {
+            Debug.Assert(item != null);
+        }
     }
 
     public LostItemType RandomItem()

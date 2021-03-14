@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class Shredder : MonoBehaviour
 {
-    public GlobalItemQueue globalItemQueue;
+    [SerializeField]
+    private GlobalItemQueue _globalItemQueue;
 
     private void Awake()
     {
-        Debug.Assert(globalItemQueue != null);
+        Debug.Assert(_globalItemQueue != null);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -16,7 +17,7 @@ public class Shredder : MonoBehaviour
         var lostItem = collision.gameObject.GetComponent<LostItem>();
         if (lostItem != null)
         {
-            globalItemQueue.ShredLostItem(lostItem);
+            _globalItemQueue.ShredLostItem(lostItem);
         }
     }
 

@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class LostItem : MonoBehaviour
 {
-    public float weight;
+    [SerializeField]
+    private LostItemType _itemType = default;
 
-    public LostItemType itemType;
+    public LostItemType ItemType { get => _itemType; }
 
-    public GameObject _explosion;
+    [SerializeField]
+    private GameObject _explosion = default;
 
     private Rigidbody2D _rigidBody;
 
@@ -16,15 +18,19 @@ public class LostItem : MonoBehaviour
 
     private void Awake()
     {
+        Debug.Assert(_itemType != null);
+        Debug.Assert(_explosion != null);
+
         _rigidBody = GetComponent<Rigidbody2D>();
+        Debug.Assert(_rigidBody != null);
+
         var renderer = GetComponentInChildren<SpriteRenderer>();
-        renderer.sprite = itemType.sprite;
+        renderer.sprite = ItemType.sprite;
     }
 
     public void Collect()
     {
         Destroy(gameObject);
-        // TODO: Increase score.
     }
 
     public void Drop()

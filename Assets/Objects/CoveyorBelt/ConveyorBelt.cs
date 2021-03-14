@@ -18,7 +18,7 @@ public class ConveyorBelt : MonoBehaviour
     }
 
     [SerializeField]
-    private Direction _direction;
+    private Direction _direction = default;
 
     [SerializeField]
     private float _speedScaling = 1.0f;

@@ -5,24 +5,24 @@ using UnityEngine;
 public class CloudGenerator : MonoBehaviour
 {
     [SerializeField]
-    private CloudController[] _prefabs;
+    private CloudController[] _prefabs = default;
 
     [SerializeField]
-    private float _minCloudPeriod;
+    private float _minCloudPeriod = 40.0f;
     [SerializeField]
-    private float _maxCloudPeriod;
+    private float _maxCloudPeriod = 20.0f;
 
     [SerializeField]
-    private int _numInitialClouds;
+    private int _numInitialClouds = 3;
 
     [SerializeField]
-    private float _minCloudX;
+    private float _minCloudX = -13.0f;
     [SerializeField]
-    private float _maxCloudX;
+    private float _maxCloudX = 13.0f;
     [SerializeField]
-    private float _minCloudY;
+    private float _minCloudY = -5.0f;
     [SerializeField]
-    private float _maxCloudY;
+    private float _maxCloudY = 5.0f;
 
     private float _nextCloudTime = 0;
 

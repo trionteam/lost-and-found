@@ -2,16 +2,19 @@
 
 public class LostItemSource : MonoBehaviour
 {
-    public GlobalItemQueue globalItemQueue;
+    [SerializeField]
+    private GlobalItemQueue _globalItemQueue;
 
-    public float nextItemDropTime;
-    public Vector2 initialVelocity;
+    private float _nextItemDropTime;
+
+    [SerializeField]
+    private Vector2 _initialVelocity = new Vector2(0.0f, -1.0f);
 
     private DifficultyController _difficulty;
 
     private void Awake()
     {
-        Debug.Assert(globalItemQueue != null);
+        Debug.Assert(_globalItemQueue != null);
 
         _difficulty = DifficultyController.Instance;
         Debug.Assert(_difficulty != null);
@@ -24,7 +27,7 @@ public class LostItemSource : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (nextItemDropTime <= Time.fixedTime)
+        if (_nextItemDropTime <= Time.fixedTime)
         {
             DropItem();
         }
@@ -40,15 +43,15 @@ public class LostItemSource : MonoBehaviour
 
     private void SpitItem()
     {
-        var itemPrefab = globalItemQueue.NextLostItem().prefab;
+        var itemPrefab = _globalItemQueue.NextLostItem().prefab;
         var item = Instantiate<GameObject>(itemPrefab, transform);
         var rigidBody = item.GetComponent<Rigidbody2D>();
-        rigidBody.velocity = initialVelocity;
+        rigidBody.velocity = _initialVelocity;
     }
 
     private void SetNextItemDropTime()
     {
-        nextItemDropTime =
+        _nextItemDropTime =
             Time.fixedTime + Random.Range(_difficulty.MinDropPeriod, _difficulty.MaxDropPeriod);
     }
 
@@ -56,6 +59,6 @@ public class LostItemSource : MonoBehaviour
     {
         Gizmos.color = Color.green;
         Gizmos.DrawSphere(transform.position, 0.2f);
-        Gizmos.DrawLine(transform.position, transform.position + new Vector3(initialVelocity.x, initialVelocity.y, 0.0f));
+        Gizmos.DrawLine(transform.position, transform.position + new Vector3(_initialVelocity.x, _initialVelocity.y, 0.0f));
     }
 }

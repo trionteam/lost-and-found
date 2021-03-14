@@ -13,21 +13,18 @@ public class Player : MonoBehaviour
     private float _acceleration = 0.95f;
 
     [SerializeField]
-    private Collider2D _pickupCollider;
+    private Collider2D _pickupCollider = default;
 
     private Rigidbody2D _rigidBody;
 
-    private Vector2 _previousDelta;
-
     [SerializeField]
-    private SpriteRenderer _sprite;
+    private SpriteRenderer _sprite = default;
     [SerializeField]
-    private Transform _picker;
+    private Transform _picker = default;
     [SerializeField]
     private float _spriteMaxRotationDeg = 15.0f;
 
     private LostItem _heldObject = null;
-    private Vector2 _heldObjectRelativePosition;
     private Animator _animator;
 
     [SerializeField]
@@ -79,7 +76,6 @@ public class Player : MonoBehaviour
 
                 lostItem.Pickup(this);
                 _heldObject = lostItem;
-                _heldObjectRelativePosition = colliders[i].attachedRigidbody.position - _rigidBody.position;
                 break;
             }
         }

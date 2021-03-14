@@ -4,18 +4,24 @@ using UnityEngine;
 
 public class Destination : MonoBehaviour
 {
-    public GlobalItemQueue globalItemQueue;
+    [SerializeField]
+    private GlobalItemQueue _globalItemQueue = default;
 
     private LostItemType _acceptedItemType;
 
-    public SpriteRenderer _spriteRenderer;
-    public SpriteRenderer _paperRenderer;
+    [SerializeField]
+    private SpriteRenderer _spriteRenderer = default;
+    [SerializeField]
+    private SpriteRenderer _paperRenderer = default;
 
-    public DustCloud _cloudPrefab;
+    [SerializeField]
+    private DustCloud _cloudPrefab = default;
 
-    public float spriteSize = 0.7f;
+    [SerializeField]
+    private float _spriteSize = 0.7f;
 
-    public float flashDurationSeconds = 0.2f;
+    [SerializeField]
+    private float _flashDurationSeconds = 0.2f;
     
     public LostItemType AcceptedItemType
     {
@@ -29,7 +35,7 @@ public class Destination : MonoBehaviour
 
     private void Awake()
     {
-        Debug.Assert(globalItemQueue != null);
+        Debug.Assert(_globalItemQueue != null);
         Debug.Assert(_spriteRenderer != null);
         Debug.Assert(_paperRenderer != null);
     }
@@ -37,9 +43,9 @@ public class Destination : MonoBehaviour
     public void OnTriggerEnter2D(Collider2D collision)
     {
         LostItem item = collision.gameObject.GetComponent<LostItem>();
-        if (item != null && item.itemType == _acceptedItemType)
+        if (item != null && item.ItemType == _acceptedItemType)
         {
-            globalItemQueue.CollectLostItem(item);
+            _globalItemQueue.CollectLostItem(item);
             PickNextItem();
             StartCoroutine(FlashOnCollect());
         }
@@ -62,7 +68,7 @@ public class Destination : MonoBehaviour
     {
         _paperRenderer.enabled = false;
         _spriteRenderer.enabled = false;
-        yield return new WaitForSeconds(flashDurationSeconds);
+        yield return new WaitForSeconds(_flashDurationSeconds);
         _paperRenderer.enabled = true;
         _spriteRenderer.enabled = true;
     }
@@ -74,7 +80,7 @@ public class Destination : MonoBehaviour
 
     void PickNextItem()
     {
-        AcceptedItemType = globalItemQueue.NextSearchedItem();
+        AcceptedItemType = _globalItemQueue.NextSearchedItem();
     }
 
     public void ItemShredded()
@@ -89,6 +95,6 @@ public class Destination : MonoBehaviour
         var size = sprite.bounds.size;
         var maxSize = Mathf.Max(size.x, size.y);
         _spriteRenderer.sprite = sprite;
-        _spriteRenderer.transform.localScale = new Vector3(spriteSize / maxSize, spriteSize / maxSize);
+        _spriteRenderer.transform.localScale = new Vector3(_spriteSize / maxSize, _spriteSize / maxSize);
     }
 }

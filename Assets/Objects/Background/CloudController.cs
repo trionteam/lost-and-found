@@ -5,9 +5,9 @@ using UnityEngine;
 public class CloudController : MonoBehaviour
 {
     [SerializeField]
-    private float _cloudSpeedMin;
+    private float _cloudSpeedMin = 0.05f;
     [SerializeField]
-    private float _cloudSpeedMax;
+    private float _cloudSpeedMax = 0.2f;
 
     private float _cloudSpeed;
 

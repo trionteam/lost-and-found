@@ -6,9 +6,9 @@ public class Gradient : MonoBehaviour
     private MeshFilter _meshFilter;
 
     [SerializeField]
-    private Color _bottomColor;
+    private Color _bottomColor = default;
     [SerializeField]
-    private Color _topColor;
+    private Color _topColor = default;
 
     private void Awake()
     {
