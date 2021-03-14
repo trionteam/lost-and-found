@@ -19,6 +19,9 @@ public class DifficultyController : MonoBehaviour
     private Toggle _uniqueItemsCheckbox = default;
 
     [SerializeField]
+    private Toggle _uniqueSearchedItemsCheckbox = default;
+
+    [SerializeField]
     [Tooltip("The probability that the searched item is picked from items on the screen.")]
     private float _screenProbability = 0.5f;
 
@@ -58,7 +61,7 @@ public class DifficultyController : MonoBehaviour
 
     public float TrashProbability { get => _trashProbability; }
 
-    public bool UniqueItems { get => _uniqueSearchedItems; }
+    public bool UniqueItems { get => _uniqueItems; }
 
     public bool UniqueSearchedItems { get => _uniqueSearchedItems; }
 
@@ -83,6 +86,7 @@ public class DifficultyController : MonoBehaviour
         _difficultyEditor.text = string.Format("{0}", ScreenProbability);
         _trashProbabilityEditor.text = string.Format("{0}", TrashProbability);
         _uniqueItemsCheckbox.isOn = UniqueItems;
+        _uniqueSearchedItemsCheckbox.isOn = UniqueSearchedItems;
         _speedEditor.text = string.Format("{0}", SpeedScaling);
         _playerSpeedEditor.text = string.Format("{0}", PlayerSpeedScaling);
     }
@@ -90,6 +94,7 @@ public class DifficultyController : MonoBehaviour
     public void UpdateValuesFromEditor()
     {
         _uniqueItems = _uniqueItemsCheckbox.isOn;
+        _uniqueSearchedItems = _uniqueSearchedItemsCheckbox.isOn;
 
         float difficulty;
         if (float.TryParse(_difficultyEditor.text, out difficulty)

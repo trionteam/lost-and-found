@@ -7,10 +7,10 @@ public class GlobalItemQueue : MonoBehaviour
     public delegate void ItemEventDelegate(LostItemType itemType);
 
     [SerializeField]
-    public LostItemCollection _lostItems = default;
+    private LostItemCollection _lostItems = default;
 
     [SerializeField]
-    public LostItemCollection _trashItems = default;
+    private LostItemCollection _trashItems = default;
 
     [SerializeField]
     private int _lostItemQueueSize = 4;
@@ -29,11 +29,22 @@ public class GlobalItemQueue : MonoBehaviour
 
     private DifficultyController _difficulty;
 
+    List<LostItem> _itemsInDangerZone;
+    float _dangerZoneLastUpdate;
+
     public event ItemEventDelegate OnItemFound;
     public event ItemEventDelegate OnLostItemShredded;
 
+    public static GlobalItemQueue Instance
+    {
+        get => FindObjectOfType<GlobalItemQueue>();
+    }
+
     private void Awake()
     {
+        var globalItemQueues = FindObjectsOfType<GlobalItemQueue>();
+        Debug.Assert(globalItemQueues.Length == 1);
+
         Debug.Assert(_lostItems != null);
         Debug.Assert(_trashItems != null);
 
@@ -48,6 +59,8 @@ public class GlobalItemQueue : MonoBehaviour
 
         _difficulty = DifficultyController.Instance;
         Debug.Assert(_difficulty != null);
+
+        _dangerZoneLastUpdate = Mathf.NegativeInfinity;
     }
 
     private void Start()
@@ -76,8 +89,8 @@ public class GlobalItemQueue : MonoBehaviour
         if (isOnScreen < _difficulty.ScreenProbability)
         {
             var itemsToPickFromQuery = _itemsOnScreen.Where(
-                item => _lostItems.lostItems.Contains(item) &&
-                        !inDangerZone.Contains(item));
+                itemType => _lostItems.lostItems.Contains(itemType) &&
+                            !inDangerZone.Any(item => item.ItemType == itemType));
             if (_difficulty.UniqueItems)
             {
                 itemsToPickFromQuery = itemsToPickFromQuery.Where(
@@ -100,20 +113,20 @@ public class GlobalItemQueue : MonoBehaviour
         {
             int itemIndex = Random.Range(0, _lostItemQueue.Count);
             if (_lostItemInQueueSearched[itemIndex]) continue;
-            var item = _lostItemQueue[itemIndex];
-            if (_trashItems.lostItems.IndexOf(item) >= 0) continue;
-            if (inDangerZone.Contains(item)) continue;
-            if (_difficulty.UniqueSearchedItems && ItemDestination(item) != null) continue;
+            var itemType = _lostItemQueue[itemIndex];
+            if (_trashItems.lostItems.IndexOf(itemType) >= 0) continue;
+            if (inDangerZone.Any(item => item.ItemType == itemType)) continue;
+            if (_difficulty.UniqueSearchedItems && ItemDestination(itemType) != null) continue;
             _lostItemInQueueSearched[itemIndex] = true;
-            return item;
+            return itemType;
         }
         for (int iteration = 0; iteration < _lostItems.lostItems.Count; ++iteration)
         {
             var itemIndex = Random.Range(0, _lostItems.lostItems.Count);
-            var item = _lostItems.lostItems[itemIndex];
-            if (inDangerZone.Contains(item)) continue;
-            if (_difficulty.UniqueItems && ItemDestination(item) != null) continue;
-            return item;
+            var itemType = _lostItems.lostItems[itemIndex];
+            if (inDangerZone.Any(item => item.ItemType == itemType)) continue;
+            if (_difficulty.UniqueItems && ItemDestination(itemType) != null) continue;
+            return itemType;
         }
         return _lostItems.lostItems[Random.Range(0, _lostItems.lostItems.Count)];
     }
@@ -176,22 +189,35 @@ public class GlobalItemQueue : MonoBehaviour
         _itemsOnScreen.Remove(item.ItemType);
     }
 
-    private List<LostItemType> ItemsInDangerZone()
+    public bool IsInDangerZone(LostItem item)
     {
-        var list = new List<LostItemType>();
+        var inDangerZone = ItemsInDangerZone();
+        return inDangerZone.Contains(item);
+    }
+
+    private List<LostItem> ItemsInDangerZone()
+    {
+        if (Time.fixedTime == _dangerZoneLastUpdate)
+        {
+            return _itemsInDangerZone;
+        }
+
+        var list = new List<LostItem>();
 
         var filter = new ContactFilter2D();
         filter.useTriggers = true;
         filter.SetLayerMask(LayerMask.GetMask("BeltItems"));
-        var contacts = new Collider2D[64];
+        var contacts = new Collider2D[128];
         int numColliders = _dangerZone.GetContacts(filter, contacts);
         for (int i = 0; i < numColliders; ++i)
         {
             var lostItem = contacts[i].GetComponent<LostItem>();
             if (lostItem == null) continue;
-            list.Add(lostItem.ItemType);
+            list.Add(lostItem);
         }
-        return list;
+        _itemsInDangerZone = list;
+        _dangerZoneLastUpdate = Time.fixedTime;
+        return _itemsInDangerZone;
     }
 
     public void CollectLostItem(LostItem item)

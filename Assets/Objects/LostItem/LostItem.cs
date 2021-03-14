@@ -12,7 +12,11 @@ public class LostItem : MonoBehaviour
     [SerializeField]
     private GameObject _explosion = default;
 
+    [SerializeField]
+    private GameObject _dangerZoneIndicator = default;
+
     private Rigidbody2D _rigidBody;
+    private GlobalItemQueue _globalItemQueue;
 
     private float _originalZ;
 
@@ -26,6 +30,19 @@ public class LostItem : MonoBehaviour
 
         var renderer = GetComponentInChildren<SpriteRenderer>();
         renderer.sprite = ItemType.sprite;
+
+        _globalItemQueue = GlobalItemQueue.Instance;
+        Debug.Assert(_globalItemQueue != null);
+    }
+
+    private void Update()
+    {
+        if (_dangerZoneIndicator != null)
+        {
+            _dangerZoneIndicator.SetActive(
+                _globalItemQueue.ItemDestination(ItemType) != null &&
+                _globalItemQueue.IsInDangerZone(this));
+        }
     }
 
     public void Collect()
