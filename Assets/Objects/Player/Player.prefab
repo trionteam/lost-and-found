@@ -198,13 +198,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1edd65465e11704e982c68d16af2cb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 5
-  acceleration: 0.95
-  _heldObject: {fileID: 0}
+  _maxSpeedUp: 4
+  _maxSpeedDown: 7
+  _maxSpeedHorizontal: 6
+  _acceleration: 0.95
   _pickupCollider: {fileID: 9052454543989342904}
-  sprite: {fileID: 5763568251724492478}
-  picker: {fileID: 9052454543989342905}
-  spriteMaxRotationDeg: 15
+  _sprite: {fileID: 5763568251724492478}
+  _picker: {fileID: 9052454543989342905}
+  _spriteMaxRotationDeg: 15
+  _minAnimationSpeed: 0.8
+  _maxAnimationSpeed: 1.5
 --- !u!61 &8484799408225903496
 BoxCollider2D:
   m_ObjectHideFlags: 0

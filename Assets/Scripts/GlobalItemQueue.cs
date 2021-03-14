@@ -1,10 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 public class GlobalItemQueue : MonoBehaviour
 {
@@ -21,31 +17,15 @@ public class GlobalItemQueue : MonoBehaviour
     private List<LostItemType> _itemsOnScreen = new List<LostItemType>();
 
     public int lostItemQueueSize = 16;
-    public int initialHealth = 3;
 
     public Collider2D dangerZone;
 
     private Destination[] _destinations;
 
-    public float screenProbability = 0.5f;
-    public float trashProbability = 0.3f;
-
-    public InputField difficultyEditor;
-    public InputField trashProbabilityEditor;
-    public Toggle uniqueItemsCheckbox;
+    private DifficultyController _difficulty;
 
     public event ItemEventDelegate OnItemFound;
     public event ItemEventDelegate OnLostItemShredded;
-
-    public bool UniqueItems
-    {
-        get
-        {
-            if (uniqueItemsCheckbox != null)
-                return uniqueItemsCheckbox.isOn;
-            return false;
-        }
-    }
 
     private void Awake()
     {
@@ -60,42 +40,14 @@ public class GlobalItemQueue : MonoBehaviour
         _lostItemInQueueSearched = new List<bool>(lostItemQueueSize);
 
         _destinations = FindObjectsOfType<Destination>();
+
+        _difficulty = DifficultyController.Instance;
+        Debug.Assert(_difficulty != null);
     }
 
     private void Start()
     {
         _itemsOnScreen.Clear();
-        difficultyEditor.text = string.Format("{0}", screenProbability);
-    }
-
-    public void AdjustDifficulty()
-    {
-        float difficulty = 0.0f;
-        if (float.TryParse(difficultyEditor.text, out difficulty)
-            && difficulty >= 0.0f
-            && difficulty <= 1.0f)
-        {
-            screenProbability = difficulty;
-        }
-        else
-        {
-            difficultyEditor.text = string.Format("{0}", screenProbability);
-        }
-
-        float parsedTrashProbability = 0.0f;
-        if (float.TryParse(trashProbabilityEditor.text, out parsedTrashProbability)
-            && parsedTrashProbability >= 0.0f
-            && parsedTrashProbability <= 1.0f)
-        {
-            trashProbability = parsedTrashProbability;
-        }
-        else
-        {
-            trashProbabilityEditor.text = string.Format("{0}", trashProbability);
-        }
-
-        _lostItemQueue.Clear();
-        RefillQueue();
     }
 
     public LostItemType NextLostItem()
@@ -116,12 +68,12 @@ public class GlobalItemQueue : MonoBehaviour
         var inDangerZone = ItemsInDangerZone();
 
         var isOnScreen = Random.Range(0.0f, 1.0f);
-        if (isOnScreen < screenProbability)
+        if (isOnScreen < _difficulty.screenProbability)
         {
             var itemsToPickFromQuery = _itemsOnScreen.Where(
                 item => lostItems.lostItems.Contains(item) &&
                         !inDangerZone.Contains(item));
-            if (UniqueItems)
+            if (_difficulty.uniqueItems)
             {
                 itemsToPickFromQuery = itemsToPickFromQuery.Where(
                     item => ItemDestination(item) == null);
@@ -146,7 +98,7 @@ public class GlobalItemQueue : MonoBehaviour
             var item = _lostItemQueue[itemIndex];
             if (trashItems.lostItems.IndexOf(item) >= 0) continue;
             if (inDangerZone.Contains(item)) continue;
-            if (UniqueItems && ItemDestination(item) != null) continue;
+            if (_difficulty.uniqueItems && ItemDestination(item) != null) continue;
             _lostItemInQueueSearched[itemIndex] = true;
             return item;
         }
@@ -155,7 +107,7 @@ public class GlobalItemQueue : MonoBehaviour
             var itemIndex = Random.Range(0, lostItems.lostItems.Count);
             var item = lostItems.lostItems[itemIndex];
             if (inDangerZone.Contains(item)) continue;
-            if (UniqueItems && ItemDestination(item) != null) continue;
+            if (_difficulty.uniqueItems && ItemDestination(item) != null) continue;
             return item;
         }
         return lostItems.lostItems[Random.Range(0, lostItems.lostItems.Count)];
@@ -164,7 +116,7 @@ public class GlobalItemQueue : MonoBehaviour
     private void RefillQueue()
     {
         IEnumerable<LostItemType> itemsToPickFromQuery = lostItems.lostItems;
-        if (UniqueItems)
+        if (_difficulty.uniqueItems)
         {
             itemsToPickFromQuery = itemsToPickFromQuery.Where(
                 item => trashItems.lostItems.Contains(item) ||
@@ -174,7 +126,7 @@ public class GlobalItemQueue : MonoBehaviour
         var itemsToPickFrom = itemsToPickFromQuery.ToList();
         for (int i = _lostItemQueue.Count; i < lostItemQueueSize; ++i)
         {
-            var isTrash = Random.Range(0.0f, 1.0f) < trashProbability;
+            var isTrash = Random.Range(0.0f, 1.0f) < _difficulty.trashProbability;
             LostItemType itemType = null;
             if (!isTrash && itemsToPickFrom.Count > 0)
             {

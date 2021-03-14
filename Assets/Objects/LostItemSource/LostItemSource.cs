@@ -1,20 +1,20 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class LostItemSource : MonoBehaviour
 {
     public GlobalItemQueue globalItemQueue;
 
-    public float minPeriod;
-    public float maxPeriod;
-
     public float nextItemDropTime;
     public Vector2 initialVelocity;
+
+    private DifficultyController _difficulty;
 
     private void Awake()
     {
         Debug.Assert(globalItemQueue != null);
+
+        _difficulty = DifficultyController.Instance;
+        Debug.Assert(_difficulty != null);
     }
 
     private void Start()
@@ -48,7 +48,8 @@ public class LostItemSource : MonoBehaviour
 
     private void SetNextItemDropTime()
     {
-        nextItemDropTime = Time.fixedTime + Random.Range(minPeriod, maxPeriod);
+        nextItemDropTime =
+            Time.fixedTime + Random.Range(_difficulty.MinDropPeriod, _difficulty.MaxDropPeriod);
     }
 
     private void OnDrawGizmos()

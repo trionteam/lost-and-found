@@ -733,10 +733,10 @@ PlayerSettings:
     m_VersionCode: 1
     m_VersionName: 
   apiCompatibilityLevel: 6
-  cloudProjectId: 
+  cloudProjectId: ce4e49ae-100c-4b3b-88be-8a21783aa260
   framebufferDepthMemorylessMode: 0
-  projectName: 
-  organizationId: 
+  projectName: Alois Alzheimer Airport
+  organizationId: ondrasej_unity
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0

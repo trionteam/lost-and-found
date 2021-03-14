@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5065741792190075804}
   - component: {fileID: 5065741792190075805}
   m_Layer: 8
-  m_Name: Cog
+  m_Name: LeftCog
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -184,26 +184,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d5d7a05fe00ad94a9102cc0ba2930c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  beltSpeed: 0
+  _direction: 0
+  _speedScaling: 1
   beltPositionY: 0
   moveCollider: {fileID: 5065741792258112092}
   _width: 4
-  cogs:
+  _cogs:
   - {fileID: 5065741792190075804}
   - {fileID: 5065741793240679003}
   - {fileID: 5065741793741817379}
-  leftCogs:
+  _leftCogs:
   - {fileID: 5065741792793666914}
   - {fileID: 5065741792190075804}
-  rightCogs:
+  _rightCogs:
   - {fileID: 5065741794055062884}
   - {fileID: 5065741793741817379}
-  leftTopBelt: {fileID: 5065741792319684243}
-  rightTopBelt: {fileID: 5065741793059652738}
-  leftBottomBelt: {fileID: 5065741792668239374}
-  rightBottomBelt: {fileID: 5065741793178267275}
-  beltCollider: {fileID: 5065741792258112067}
-  movementCollider: {fileID: 5065741792258112092}
+  _leftTopBelt: {fileID: 5065741792319684243}
+  _rightTopBelt: {fileID: 5065741793059652738}
+  _leftBottomBelt: {fileID: 5065741792668239374}
+  _rightBottomBelt: {fileID: 5065741793178267275}
+  _beltCollider: {fileID: 5065741792258112067}
+  _movementCollider: {fileID: 5065741792258112092}
 --- !u!61 &5065741792258112092
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -406,7 +407,7 @@ GameObject:
   - component: {fileID: 5065741792793666941}
   - component: {fileID: 5065741792793666915}
   m_Layer: 8
-  m_Name: SideCog
+  m_Name: LeftSideCog
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -750,7 +751,7 @@ GameObject:
   - component: {fileID: 5065741793741817379}
   - component: {fileID: 5065741793741817378}
   m_Layer: 8
-  m_Name: Cog
+  m_Name: RightCog
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -833,7 +834,7 @@ GameObject:
   - component: {fileID: 5065741794055062887}
   - component: {fileID: 5065741794055062885}
   m_Layer: 8
-  m_Name: SideCog
+  m_Name: RIghtSideCog
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
