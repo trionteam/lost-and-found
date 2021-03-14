@@ -80,6 +80,7 @@ public class Destination : MonoBehaviour
 
     void PickNextItem()
     {
+        AcceptedItemType = null;
         AcceptedItemType = _globalItemQueue.NextSearchedItem();
     }
 
@@ -91,10 +92,18 @@ public class Destination : MonoBehaviour
 
     void UpdateSprite()
     {
-        var sprite = _acceptedItemType.sprite;
-        var size = sprite.bounds.size;
-        var maxSize = Mathf.Max(size.x, size.y);
-        _spriteRenderer.sprite = sprite;
-        _spriteRenderer.transform.localScale = new Vector3(_spriteSize / maxSize, _spriteSize / maxSize);
+        if (_acceptedItemType == null)
+        {
+            _spriteRenderer.enabled = false;
+        }
+        else
+        {
+            _spriteRenderer.enabled = true;
+            var sprite = _acceptedItemType.sprite;
+            var size = sprite.bounds.size;
+            var maxSize = Mathf.Max(size.x, size.y);
+            _spriteRenderer.sprite = sprite;
+            _spriteRenderer.transform.localScale = new Vector3(_spriteSize / maxSize, _spriteSize / maxSize);
+        }
     }
 }

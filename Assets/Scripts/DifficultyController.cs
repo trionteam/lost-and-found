@@ -18,9 +18,18 @@ public class DifficultyController : MonoBehaviour
     [SerializeField]
     private Toggle _uniqueItemsCheckbox = default;
 
-    public float screenProbability = 0.5f;
-    public float trashProbability = 0.3f;
-    public bool uniqueItems = true;
+    [SerializeField]
+    [Tooltip("The probability that the searched item is picked from items on the screen.")]
+    private float _screenProbability = 0.5f;
+
+    [SerializeField]
+    private float _trashProbability = 0.3f;
+
+    [SerializeField]
+    private bool _uniqueItems = true;
+
+    [SerializeField]
+    private bool _uniqueSearchedItems = true;
 
     [SerializeField]
     private float _minDropPeriod = 3.0f;
@@ -45,6 +54,14 @@ public class DifficultyController : MonoBehaviour
 
     public float PlayerSpeedScaling { get => _playerSpeedScaling; }
 
+    public float ScreenProbability { get => _screenProbability; }
+
+    public float TrashProbability { get => _trashProbability; }
+
+    public bool UniqueItems { get => _uniqueSearchedItems; }
+
+    public bool UniqueSearchedItems { get => _uniqueSearchedItems; }
+
     public static DifficultyController Instance
     {
         get => FindObjectOfType<DifficultyController>();
@@ -63,21 +80,23 @@ public class DifficultyController : MonoBehaviour
 
     private void UpdateEditorsFromValues()
     {
-        _difficultyEditor.text = string.Format("{0}", screenProbability);
-        _trashProbabilityEditor.text = string.Format("{0}", trashProbability);
-        _uniqueItemsCheckbox.isOn = uniqueItems;
+        _difficultyEditor.text = string.Format("{0}", ScreenProbability);
+        _trashProbabilityEditor.text = string.Format("{0}", TrashProbability);
+        _uniqueItemsCheckbox.isOn = UniqueItems;
+        _speedEditor.text = string.Format("{0}", SpeedScaling);
+        _playerSpeedEditor.text = string.Format("{0}", PlayerSpeedScaling);
     }
 
     public void UpdateValuesFromEditor()
     {
-        uniqueItems = _uniqueItemsCheckbox.isOn;
+        _uniqueItems = _uniqueItemsCheckbox.isOn;
 
         float difficulty;
         if (float.TryParse(_difficultyEditor.text, out difficulty)
             && difficulty >= 0.0f
             && difficulty <= 1.0f)
         {
-            screenProbability = difficulty;
+            _screenProbability = difficulty;
         }
 
         float parsedTrashProbability;
@@ -85,7 +104,7 @@ public class DifficultyController : MonoBehaviour
             && parsedTrashProbability >= 0.0f
             && parsedTrashProbability <= 1.0f)
         {
-            trashProbability = parsedTrashProbability;
+            _trashProbability = parsedTrashProbability;
         }
 
         float parsedSpeed;
@@ -93,6 +112,13 @@ public class DifficultyController : MonoBehaviour
             && parsedSpeed > 0.1f)
         {
             _speedScaling = parsedSpeed;
+        }
+
+        float parsedPlayerSpeed;
+        if (float.TryParse(_playerSpeedEditor.text, out parsedPlayerSpeed)
+            && parsedPlayerSpeed > 0.1f)
+        {
+            _playerSpeedScaling = parsedPlayerSpeed;
         }
 
         UpdateEditorsFromValues();

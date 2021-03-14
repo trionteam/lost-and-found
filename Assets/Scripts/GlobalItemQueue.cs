@@ -73,12 +73,12 @@ public class GlobalItemQueue : MonoBehaviour
         var inDangerZone = ItemsInDangerZone();
 
         var isOnScreen = Random.Range(0.0f, 1.0f);
-        if (isOnScreen < _difficulty.screenProbability)
+        if (isOnScreen < _difficulty.ScreenProbability)
         {
             var itemsToPickFromQuery = _itemsOnScreen.Where(
                 item => _lostItems.lostItems.Contains(item) &&
                         !inDangerZone.Contains(item));
-            if (_difficulty.uniqueItems)
+            if (_difficulty.UniqueItems)
             {
                 itemsToPickFromQuery = itemsToPickFromQuery.Where(
                     item => ItemDestination(item) == null);
@@ -103,7 +103,7 @@ public class GlobalItemQueue : MonoBehaviour
             var item = _lostItemQueue[itemIndex];
             if (_trashItems.lostItems.IndexOf(item) >= 0) continue;
             if (inDangerZone.Contains(item)) continue;
-            if (_difficulty.uniqueItems && ItemDestination(item) != null) continue;
+            if (_difficulty.UniqueSearchedItems && ItemDestination(item) != null) continue;
             _lostItemInQueueSearched[itemIndex] = true;
             return item;
         }
@@ -112,7 +112,7 @@ public class GlobalItemQueue : MonoBehaviour
             var itemIndex = Random.Range(0, _lostItems.lostItems.Count);
             var item = _lostItems.lostItems[itemIndex];
             if (inDangerZone.Contains(item)) continue;
-            if (_difficulty.uniqueItems && ItemDestination(item) != null) continue;
+            if (_difficulty.UniqueItems && ItemDestination(item) != null) continue;
             return item;
         }
         return _lostItems.lostItems[Random.Range(0, _lostItems.lostItems.Count)];
@@ -121,7 +121,7 @@ public class GlobalItemQueue : MonoBehaviour
     private void RefillQueue()
     {
         IEnumerable<LostItemType> itemsToPickFromQuery = _lostItems.lostItems;
-        if (_difficulty.uniqueItems)
+        if (_difficulty.UniqueItems)
         {
             itemsToPickFromQuery = itemsToPickFromQuery.Where(
                 item => _trashItems.lostItems.Contains(item) ||
@@ -131,7 +131,7 @@ public class GlobalItemQueue : MonoBehaviour
         var itemsToPickFrom = itemsToPickFromQuery.ToList();
         for (int i = _lostItemQueue.Count; i < _lostItemQueueSize; ++i)
         {
-            var isTrash = Random.Range(0.0f, 1.0f) < _difficulty.trashProbability;
+            var isTrash = Random.Range(0.0f, 1.0f) < _difficulty.TrashProbability;
             LostItemType itemType = null;
             if (!isTrash && itemsToPickFrom.Count > 0)
             {
