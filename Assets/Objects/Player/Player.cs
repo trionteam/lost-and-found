@@ -85,8 +85,7 @@ public class Player : MonoBehaviour
         }
         if (Input.GetButtonUp("Fire1") && _heldObject != null)
         {
-            _heldObject.Drop();
-            _heldObject = null;
+            DropItem();
         }
 
         float xVelocity = _rigidBody.velocity.x;
