@@ -7,16 +7,16 @@ public class GlobalItemQueue : MonoBehaviour
     public delegate void ItemEventDelegate(LostItemType itemType);
 
     [SerializeField]
-    public LostItemCollection _lostItems;
+    public LostItemCollection _lostItems = default;
 
     [SerializeField]
-    public LostItemCollection _trashItems;
+    public LostItemCollection _trashItems = default;
 
     [SerializeField]
     private int _lostItemQueueSize = 4;
 
     [SerializeField]
-    private Collider2D _dangerZone;
+    private Collider2D _dangerZone = default;
 
     private List<LostItemType> _allItemTypes;
 

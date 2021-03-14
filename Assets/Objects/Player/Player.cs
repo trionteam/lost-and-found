@@ -9,6 +9,10 @@ public class Player : MonoBehaviour
     [SerializeField]
     private float _maxSpeedHorizontal = 5.0f;
 
+    private float MaxSpeedUp { get => _maxSpeedUp * _difficulty.PlayerSpeedScaling; }
+    private float MaxSpeedDown { get => _maxSpeedDown * _difficulty.PlayerSpeedScaling; }
+    private float MaxSpeedHorizontal { get => _maxSpeedHorizontal * _difficulty.PlayerSpeedScaling; }
+
     [SerializeField]
     private float _acceleration = 0.95f;
 
@@ -27,6 +31,8 @@ public class Player : MonoBehaviour
     private LostItem _heldObject = null;
     private Animator _animator;
 
+    private DifficultyController _difficulty;
+
     [SerializeField]
     private float _minAnimationSpeed = 0.5f;
 
@@ -35,6 +41,9 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
+        _difficulty = DifficultyController.Instance;
+        Debug.Assert(_difficulty != null);
+
         _rigidBody = GetComponent<Rigidbody2D>();
         Debug.Assert(_rigidBody != null);
 
@@ -44,9 +53,9 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
-        float xVelocity = _maxSpeedHorizontal * Input.GetAxis("Horizontal");
+        float xVelocity = MaxSpeedHorizontal * Input.GetAxis("Horizontal");
         float yAxis = Input.GetAxis("Vertical");
-        float yVelocity = yAxis > 0.0f ? _maxSpeedUp * yAxis : _maxSpeedDown * yAxis;
+        float yVelocity = yAxis > 0.0f ? MaxSpeedUp * yAxis : MaxSpeedDown * yAxis;
         var newVelocity = new Vector2(xVelocity, yVelocity);
         _rigidBody.velocity = Vector2.Lerp(newVelocity, _rigidBody.velocity, _acceleration);
 
@@ -85,7 +94,7 @@ public class Player : MonoBehaviour
         }
 
         float xVelocity = _rigidBody.velocity.x;
-        float rotation = -_spriteMaxRotationDeg * Mathf.Abs(xVelocity) / _maxSpeedHorizontal;
+        float rotation = -_spriteMaxRotationDeg * Mathf.Abs(xVelocity) / MaxSpeedHorizontal;
         _sprite.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, rotation);
 
         if (xVelocity < 0.0f)
@@ -97,7 +106,7 @@ public class Player : MonoBehaviour
             transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
         }
 
-        float yVelocityMagniture = (_rigidBody.velocity.y / (2.0f * _maxSpeedDown)) + 0.5f;
+        float yVelocityMagniture = (_rigidBody.velocity.y / (2.0f * MaxSpeedDown)) + 0.5f;
         _animator.speed = _minAnimationSpeed + (_maxAnimationSpeed - _minAnimationSpeed) * yVelocityMagniture;
     }
 

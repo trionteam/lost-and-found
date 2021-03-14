@@ -13,6 +13,9 @@ public class DifficultyController : MonoBehaviour
     private InputField _speedEditor = default;
 
     [SerializeField]
+    private InputField _playerSpeedEditor = default;
+
+    [SerializeField]
     private Toggle _uniqueItemsCheckbox = default;
 
     public float screenProbability = 0.5f;
@@ -28,12 +31,19 @@ public class DifficultyController : MonoBehaviour
     private float _speedScaling = 1.0f;
 
     [SerializeField]
+    private float _playerSpeedScaling = 1.0f;
+
+    [SerializeField]
     private float _beltSpeed = 1.0f;
 
     public float MinDropPeriod { get => _minDropPeriod / _speedScaling; }
     public float MaxDropPeriod { get => _maxDropPeriod / _speedScaling; }
 
     public float BeltSpeed { get => _speedScaling * _beltSpeed; }
+
+    public float SpeedScaling { get => _speedScaling; }
+
+    public float PlayerSpeedScaling { get => _playerSpeedScaling; }
 
     public static DifficultyController Instance
     {

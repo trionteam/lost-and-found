@@ -5,7 +5,7 @@ using UnityEngine;
 public class Shredder : MonoBehaviour
 {
     [SerializeField]
-    private GlobalItemQueue _globalItemQueue;
+    private GlobalItemQueue _globalItemQueue = default;
 
     private void Awake()
     {

@@ -3,7 +3,7 @@
 public class LostItemSource : MonoBehaviour
 {
     [SerializeField]
-    private GlobalItemQueue _globalItemQueue;
+    private GlobalItemQueue _globalItemQueue = default;
 
     private float _nextItemDropTime;
 
