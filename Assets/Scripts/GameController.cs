@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -35,13 +36,57 @@ public class GameController : MonoBehaviour
     [SerializeField]
     private int _initialHealth = 3;
 
+    /// <summary>
+    /// The current score of the player. Setting it will also update the text
+    /// in the HUD.
+    /// </summary>
+    public int Score
+    { 
+        get => _score; 
+        private set 
+        {
+            _score = value;
+            _scoreDisplay.text = string.Format("{0}", _score);
+        }
+    }
+    /// <summary>
+    /// The current score of the player. This should never be accessed
+    /// directly, only through <see cref="Score"/>.
+    /// </summary>
     private int _score = 0;
+
+    /// <summary>
+    /// The current health of the player. Setting it will also update the heart
+    /// display in the HUD.
+    /// </summary>
+    public int Health
+    {
+        get => _health;
+        private set
+        {
+            _health = Mathf.Max(0, value);
+            UpdateHearts();
+        }
+    }
+    /// <summary>
+    /// The current health of the player. This should never be accessed
+    /// directly, only through <see cref="Health"/>.
+    /// </summary>
     private int _health = 0;
+
+    public static GameController Instance
+    {
+        get => FindObjectOfType<GameController>();
+    }
+
+    public event Action OnGameStart;
 
     private void Awake()
     {
+        Debug.Assert(FindObjectsOfType<GameController>().Length == 1);
+
         Debug.Assert(_globalQueue != null);
-        _globalQueue.OnLostItemShredded += OnLostItemShredded;
+        _globalQueue.OnSearchedItemShredded += OnSearchedItemShredded;
         _globalQueue.OnItemFound += OnItemFound;
 
         Debug.Assert(_scoreDisplay != null);
@@ -49,9 +94,6 @@ public class GameController : MonoBehaviour
 
     void Start()
     {
-        _health = _initialHealth;
-        _score = 0;
-        _scoreDisplay.text = "0";
         ShowIntroScreen();
     }
 
@@ -88,18 +130,21 @@ public class GameController : MonoBehaviour
 
     private void ShowIntroScreen()
     {
-        _player.gameObject.SetActive(false);
+        Health = _initialHealth;
+        Score = 0;
+        _player.ControlledByAi = true;
         _state = GameState.StartScreen;
-        Time.timeScale = 0.0f;
         _startScreen.SetActive(true);
     }
 
     private void StartGame()
     {
         _state = GameState.Game;
-        Time.timeScale = 1.0f;
+        Health = _initialHealth;
+        Score = 0;
         _startScreen.SetActive(false);
-        _player.gameObject.SetActive(true);
+        _player.ControlledByAi = false;
+        OnGameStart?.Invoke();
     }
 
     private void PauseGame()
@@ -140,18 +185,28 @@ public class GameController : MonoBehaviour
 
     private void OnItemFound(LostItemType itemType)
     {
-        _score += itemType.scoreIncrease;
-        _scoreDisplay.text = string.Format("{0}", _score);
+        Score += itemType.scoreIncrease;
     }
 
-    private void OnLostItemShredded(LostItemType itemType)
+    private void OnSearchedItemShredded(LostItemType itemType)
     {
         // Update the current health.
-        _health = Mathf.Max(0, _health - itemType.healthDecrease);
+        Health -= itemType.healthDecrease;
 
-        // Update the life indicator in the HUD.
+        // End the game if needed.
+        if (Health == 0 && _state != GameState.StartScreen)
+        {
+            EndGame();
+        }
+    }
+
+    /// <summary>
+    /// Updates the life indicator in the HUD.
+    /// </summary>
+    private void UpdateHearts()
+    {
         // TODO(ondrasej): Move this code to the HUD.
-        var visibleHearts = Mathf.Min(_hearts.Length, _health);
+        var visibleHearts = Mathf.Min(_hearts.Length, Health);
         for (int i = 0; i < visibleHearts; i++)
         {
             _hearts[i].SetActive(true);
@@ -159,12 +214,6 @@ public class GameController : MonoBehaviour
         for (int i = visibleHearts; i < _hearts.Length; i++)
         {
             _hearts[i].SetActive(false);
-        }
-
-        // End the game if needed.
-        if (_health == 0)
-        {
-            EndGame();
         }
     }
 }

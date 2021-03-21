@@ -6,6 +6,7 @@ public class GlobalItemQueue : MonoBehaviour
 {
     public delegate void ItemEventDelegate(LostItemType itemType);
 
+    #region Private fields
     [SerializeField]
     private LostItemCollection _lostItems = default;
 
@@ -29,17 +30,19 @@ public class GlobalItemQueue : MonoBehaviour
 
     private DifficultyController _difficulty;
 
-    List<LostItem> _itemsInDangerZone;
-    float _dangerZoneLastUpdate;
+    private List<LostItem> _itemsInDangerZone;
+    private float _dangerZoneLastUpdate;
+    #endregion
 
     public event ItemEventDelegate OnItemFound;
-    public event ItemEventDelegate OnLostItemShredded;
+    public event ItemEventDelegate OnSearchedItemShredded;
 
     public static GlobalItemQueue Instance
     {
         get => FindObjectOfType<GlobalItemQueue>();
     }
 
+    #region Unity Messages
     private void Awake()
     {
         var globalItemQueues = FindObjectsOfType<GlobalItemQueue>();
@@ -61,11 +64,34 @@ public class GlobalItemQueue : MonoBehaviour
         Debug.Assert(_difficulty != null);
 
         _dangerZoneLastUpdate = Mathf.NegativeInfinity;
+
+        GameController.Instance.OnGameStart += ResetOnGameStart;
     }
 
     private void Start()
     {
         _itemsOnScreen.Clear();
+    }
+    #endregion
+
+    public void ResetOnGameStart()
+    {
+        _lostItemQueue.Clear();
+        _lostItemInQueueSearched.Clear();
+        _itemsOnScreen.Clear();
+        _itemsInDangerZone.Clear();
+        _dangerZoneLastUpdate = float.NegativeInfinity;
+
+        var lostItems = FindObjectsOfType<LostItem>();
+        foreach(var item in lostItems)
+        {
+            Destroy(item.gameObject);
+        }
+
+        foreach(var destination in _destinations)
+        {
+            destination.ResetOnGameStart();
+        }
     }
 
     public LostItemType NextLostItem()
@@ -183,7 +209,7 @@ public class GlobalItemQueue : MonoBehaviour
         {
             itemDestination.ItemShredded();
 
-            OnLostItemShredded?.Invoke(item.ItemType);
+            OnSearchedItemShredded?.Invoke(item.ItemType);
         }
         item.Shred();
         _itemsOnScreen.Remove(item.ItemType);

@@ -1802,13 +1802,13 @@ MonoBehaviour:
   _playerSpeedEditor: {fileID: 317423715}
   _uniqueItemsCheckbox: {fileID: 111669645}
   _uniqueSearchedItemsCheckbox: {fileID: 213305110}
-  _screenProbability: 0.5
-  _trashProbability: 0.3
+  _screenProbability: 0.8
+  _trashProbability: 0.2
   _uniqueItems: 1
   _uniqueSearchedItems: 1
   _minDropPeriod: 3
   _maxDropPeriod: 5
-  _speedScaling: 1
+  _speedScaling: 1.2
   _playerSpeedScaling: 1
   _beltSpeed: 1
 --- !u!1 &405187693
@@ -9864,6 +9864,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 9052454544070981312, guid: 06b19e7fcd69b814bab5e11b51171eec,
+        type: 3}
+      propertyPath: _globalQueue
+      value: 
+      objectReference: {fileID: 1801041843}
+    - target: {fileID: 9052454544070981312, guid: 06b19e7fcd69b814bab5e11b51171eec,
+        type: 3}
+      propertyPath: _aiDefaultPosition
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 9052454544070981314, guid: 06b19e7fcd69b814bab5e11b51171eec,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -9872,7 +9882,7 @@ PrefabInstance:
     - target: {fileID: 9052454544070981314, guid: 06b19e7fcd69b814bab5e11b51171eec,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 2.481
       objectReference: {fileID: 0}
     - target: {fileID: 9052454544070981314, guid: 06b19e7fcd69b814bab5e11b51171eec,
         type: 3}

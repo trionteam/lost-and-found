@@ -78,7 +78,7 @@ public class Destination : MonoBehaviour
         PickNextItem();
     }
 
-    void PickNextItem()
+    private void PickNextItem()
     {
         AcceptedItemType = null;
         AcceptedItemType = _globalItemQueue.NextSearchedItem();
@@ -90,7 +90,12 @@ public class Destination : MonoBehaviour
         PickNextItem();
     }
 
-    void UpdateSprite()
+    public void ResetOnGameStart()
+    {
+        PickNextItem();
+    }
+
+    private void UpdateSprite()
     {
         if (_acceptedItemType == null)
         {
