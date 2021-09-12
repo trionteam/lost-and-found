@@ -23,7 +23,7 @@ public class GameController : MonoBehaviour
     [SerializeField]
     private Display _endScreen = null;
     [SerializeField]
-    private GameObject _pauseScreen = null;
+    private Display _pauseScreen = null;
 
     [SerializeField]
     private GameObject[] _hearts = null;
@@ -134,8 +134,7 @@ public class GameController : MonoBehaviour
         Score = 0;
         _player.ControlledByAi = true;
         _state = GameState.StartScreen;
-        _startScreen.gameObject.SetActive(true);
-        _startScreen.DisplayTextAnimated("Press\nany key\nTo start");
+        _startScreen.ShowAndAnimate();
     }
 
     private void StartGame()
@@ -143,7 +142,7 @@ public class GameController : MonoBehaviour
         _state = GameState.Game;
         Health = _initialHealth;
         Score = 0;
-        _startScreen.gameObject.SetActive(false);
+        _startScreen.Hide();
         _player.ControlledByAi = false;
         OnGameStart?.Invoke();
     }
@@ -152,14 +151,14 @@ public class GameController : MonoBehaviour
     {
         _state = GameState.Paused;
         Time.timeScale = 0.0f;
-        _pauseScreen.SetActive(true);
+        _pauseScreen.ShowAndAnimate();
     }
 
     public void UnpauseGame()
     {
         _state = GameState.Game;
         Time.timeScale = 1.0f;
-        _pauseScreen.SetActive(false);
+        _pauseScreen.Hide();
     }
 
     private void EndGame()
@@ -169,8 +168,7 @@ public class GameController : MonoBehaviour
             UnpauseGame();
         }
         _state = GameState.EndScreen;
-        _endScreen.gameObject.SetActive(true);
-        _endScreen.DisplayTextAnimated("You\nAre\nFired!");
+        _endScreen.ShowAndAnimate();
         _player.gameObject.SetActive(false);
     }
 
